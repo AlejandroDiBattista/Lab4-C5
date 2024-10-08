@@ -1,6 +1,39 @@
 # TP5: *1er Parcial*
 
-Este trabajo cuenta como el `primer parcial`.
+
+Los siguientes alumnos deben recuperar el parcial.
+```
+ 1️⃣2️⃣3️⃣4️⃣5️⃣
+ 🟢🟢🔴🔴🔴  1. 58690  Díaz, Facundo Gabriel                   
+ 🟢🟢🟢🟢🔴  2. 58876  Díaz, Manuel Lautaro                    
+ 🟢🟢🟢🟢🟡  5. 58735  Fernandez Gomez, Manuel A               
+ 🟢🟢🟢🟢🟡  9. 58734  Galván, Víctor Mateo                    
+ 🟢🟢🟢🟢🟡 11. 58740  García, Sergio Martín                   
+ 🟢🔴🟢🟢🔴 15. 59488  González, Mariano Emanuel               
+ 🟢🟢🟢🟢🟡 17. 59068  Gonzalez, Silvina Mariela               
+ 🟢🟢🟢🟢🟡 19. 58736  Juarez Hindi, Lucas David               
+ 🟢🟢🟢🔴🟡 20. 58761  Juarez, Lautaro Andres En               
+ 🟢🟢🟢🟢🟡 25. 58756  Lazarte, Agustina Milagro               
+ 🟢🟢🔴🔴🟡 28. 58724  Lopez Garcia, Marcos Julio              
+ 🟢🟢🟢🟢🟡 33. 59099  Moyano Berrondo, Tahiel                 
+ 🟢🟢🟢🟢🟡 42. 58692  Rosselo Salas, Maia Josefina            
+ 🟢🟢🟢🔴🟡 43. 58873  Salazar, Enzo Gabriel                   
+ 🟢🟢🟢🔴🔴 46. 59052  Teseira, Lucas Benjamin                 
+ 🟢🟢🟢🟢🟡 49. 59188  Vaca, Andrés Emanuel                    
+ 🟢🟢🔴🔴🔴 52. 58874  Rigazio, Malena Soledad                 
+ 🟢🟢🟢🟢🟡 54. 55600  Cañete Jacobo, Juan Manuel              
+               
+```
+> 
+> Deben corregir el mismo para que pase todos los test y enviarlos antes del 
+> **Miercoles 9 de Octubre a las 23:59hs**.
+> 
+
+------
+------
+
+
+## Este trabajo cuenta como el `primer parcial`.
 >  
 > Es un `trabajo individual` y puede usar todos los recursos a su disposición, incluyendo el material del curso y búsquedas en internet para resolver dudas. 
 
