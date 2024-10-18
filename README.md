@@ -19,6 +19,16 @@ Los ejercicios son los siguientes:
 3. Suba el trabajo a esa rama.
 4. Cree un Pull Request 
 
+
+> **IMPORTANTE:** 
+> 
+> Esta es la clase que se tenia que 
+> dar el jueves que por dificultados por todos conocida no
+> se pudo dar. 
+>
+> https://youtu.be/GhUWlk2UbEs
+>
+```
 ## Fecha de entrega
 - Sabado 19 de octubre de 2024 a las 23:59 hs
 
