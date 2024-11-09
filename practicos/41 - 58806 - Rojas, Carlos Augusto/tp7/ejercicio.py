@@ -4,10 +4,6 @@
 ##import torch
 ##import torch.nn as nn
 ##import matplotlib.pyplot as plt
-
-
-
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -74,11 +70,11 @@ if st.sidebar.button('Entrenar'):
     plt.style.use("default")
 
     ## Graficar Pérdida durante el Entrenamiento
-    st.sidebar.subheader("Pérdida durante el entrenamiento")
+    st.sidebar.subheader("Perdida durante el entrenamiento")
     plt.figure()
-    plt.plot(range(epochs), losses, 'g-', label="Pérdidas")
-    plt.xlabel("Época")
-    plt.ylabel("Pérdida")
+    plt.plot(range(epochs), losses, 'g-', label="Perdidas")
+    plt.xlabel("Epoca")
+    plt.ylabel("Perdida")
     plt.legend()
     st.sidebar.pyplot(plt)  # Colocamos la gráfica de pérdida en la sidebar
 
@@ -97,7 +93,7 @@ if st.sidebar.button('Entrenar'):
     plt.figure()
     plt.scatter(data['dia'], data['ventas'], color='blue', label='Datos Reales')
     plt.plot(data['dia'], predictions, color='red', label='Curva de Ajuste')
-    plt.xlabel("Día del Mes")
+    plt.xlabel("Dia del Mes")
     plt.ylabel("Ventas")
     plt.legend()
     st.pyplot(plt)
