@@ -9,7 +9,7 @@ class Contacto(SQLModel, table=True):
     apellido: str
     telefono: str
 
-https://fastht.ml 
+# https://fastht.ml 
 
 # Crear la base de datos SQLite
 DATABASE_URL = "sqlite:///./contactos.db"
@@ -91,6 +91,5 @@ def eliminar_contacto(contacto_id: int, session: Session = Depends(get_session))
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
+    agregar_contactos_por_defecto()
 
-n = "); DELETE FROM contacto; --"
-f"INSERT INTO contacto (nombre, apellido, telefono) VALUES ({n}, 'Pérez', '123456789');
