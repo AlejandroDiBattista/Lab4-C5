@@ -1,95 +1,90 @@
-from fastapi import FastAPI, HTTPException, Depends
 from sqlmodel import SQLModel, Field, Session, create_engine, select
-from typing import List, Optional
+from typing import Optional
+from fasthtml.common import *
 
-# Definición del modelo de datos para Contacto
-class Contacto(SQLModel, table=True):
+# Configuración de la base de datos
+DATABASE_URL = "sqlite:///contacts.db"
+engine = create_engine(DATABASE_URL)
+
+# Definición del modelo de contacto
+class Contact(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    nombre: str = Field(max_length=50)
-    apellido: str
-    telefono: str
+    name: str
+    email: str
+    phone: Optional[str] = None
 
-# https://fastht.ml 
+# Crear la tabla de contactos si no existe
+SQLModel.metadata.create_all(engine)
 
-# Crear la base de datos SQLite
-DATABASE_URL = "sqlite:///./contactos.db"
-engine = create_engine(DATABASE_URL, echo=True)
+# Configuración de FastHTML
+app, rt = fast_app()
 
-# Crear la base de datos y las tablas
-def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
-
-create_db_and_tables()
-
-def agregar_contactos_por_defecto():
+# Ruta para ver todos los contactos
+@rt("/")
+def get_contacts():
     with Session(engine) as session:
-        contactos_existentes = session.exec(select(Contacto)).all()
-        if not contactos_existentes:
-            contactos_por_defecto = [
-                Contacto(nombre="Juan", apellido="Perez", telefono="123456789"),
-                Contacto(nombre="Maria", apellido="Gomez", telefono="987654321"),
-                Contacto(nombre="Carlos", apellido="Lopez", telefono="555555555")
-            ]
-            session.add_all(contactos_por_defecto)
+        contacts = session.exec(select(Contact)).all()
+    return Titled("Lista de Contactos", 
+        Div(*[Div(P(f"ID: {c.id}, Nombre: {c.name}, Email: {c.email}, Teléfono: {c.phone}"), 
+                Button("Editar", hx_get=f"/edit/{c.id}", cls="secondary"), 
+                Button("Borrar", hx_post=f"/delete/{c.id}", cls="danger")) 
+            for c in contacts],
+            Div(P(A("Agregar Nuevo Contacto", href="/new"))))
+    )
+
+# Ruta para agregar un nuevo contacto
+@rt("/new")
+def new_contact():
+    form = Form(method="post", action="/add")(
+        Label("Nombre:", Input(name="name")),
+        Label("Email:", Input(name="email")),
+        Label("Teléfono:", Input(name="phone")),
+        Button("Guardar", type="submit")
+    )
+    return Titled("Nuevo Contacto", form)
+
+@rt("/add")
+def post(contact_data: dict):
+    with Session(engine) as session:
+        contact = Contact(**contact_data)
+        session.add(contact)
+        session.commit()
+    return RedirectResponse(url="/")
+
+# Ruta para editar un contacto existente
+@rt("/edit/{contact_id}")
+def edit_contact(contact_id: int):
+    with Session(engine) as session:
+        contact = session.get(Contact, contact_id)
+        if not contact:
+            return Titled("Error", P("Contacto no encontrado"))
+        form = Form(method="post", action=f"/update/{contact_id}")(
+            Label("Nombre:", Input(name="name", value=contact.name)),
+            Label("Email:", Input(name="email", value=contact.email)),
+            Label("Teléfono:", Input(name="phone", value=contact.phone)),
+            Button("Guardar", type="submit")
+        )
+        return Titled("Editar Contacto", form)
+
+@rt("/update/{contact_id}")
+def post(contact_id: int, contact_data: dict):
+    with Session(engine) as session:
+        contact = session.get(Contact, contact_id)
+        if contact:
+            contact.name = contact_data.get("name", contact.name)
+            contact.email = contact_data.get("email", contact.email)
+            contact.phone = contact_data.get("phone", contact.phone)
             session.commit()
+    return RedirectResponse(url="/")
 
-agregar_contactos_por_defecto()
-
-app = FastAPI()
-
-# Dependencia para obtener una sesión de la base de datos
-def get_session():
+# Ruta para eliminar un contacto
+@rt("/delete/{contact_id}")
+def post(contact_id: int):
     with Session(engine) as session:
-        yield session
+        contact = session.get(Contact, contact_id)
+        if contact:
+            session.delete(contact)
+            session.commit()
+    return RedirectResponse(url="/")
 
-# Endpoint para crear un contacto
-@app.post("/contactos/", response_model=Contacto)
-def crear_contacto(contacto: Contacto, session: Session = Depends(get_session)):
-    session.add(contacto)
-    session.commit()
-    session.refresh(contacto)
-    return contacto
-
-# Endpoint para obtener todos los contactos
-@app.get("/contactos/", response_model=List[Contacto])
-def obtener_contactos(session: Session = Depends(get_session)):
-    contactos = session.exec(select(Contacto)).all()
-    return contactos
-
-# Endpoint para obtener un contacto por ID
-@app.get("/contactos/{contacto_id}", response_model=Contacto)
-def obtener_contacto(contacto_id: int, session: Session = Depends(get_session)):
-    contacto = session.get(Contacto, contacto_id)
-    if not contacto:
-        raise HTTPException(status_code=404, detail="Contacto no encontrado")
-    return contacto
-
-# Endpoint para actualizar un contacto por ID
-@app.put("/contactos/{contacto_id}", response_model=Contacto)
-def actualizar_contacto(contacto_id: int, contacto: Contacto, session: Session = Depends(get_session)):
-    contacto_db = session.get(Contacto, contacto_id)
-    if not contacto_db:
-        raise HTTPException(status_code=404, detail="Contacto no encontrado")
-    contacto_db.nombre = contacto.nombre
-    contacto_db.apellido = contacto.apellido
-    contacto_db.telefono = contacto.telefono
-    session.commit()
-    session.refresh(contacto_db)
-    return contacto_db
-
-# Endpoint para eliminar un contacto por ID
-@app.delete("/contactos/{contacto_id}", response_model=dict)
-def eliminar_contacto(contacto_id: int, session: Session = Depends(get_session)):
-    contacto = session.get(Contacto, contacto_id)
-    if not contacto:
-        raise HTTPException(status_code=404, detail="Contacto no encontrado")
-    session.delete(contacto)
-    session.commit()
-    return {"message": "Contacto eliminado correctamente"}
-
-# Crear la base de datos al iniciar la aplicación
-@app.on_event("startup")
-def on_startup():
-    create_db_and_tables()
-    agregar_contactos_por_defecto()
-
+serve()
