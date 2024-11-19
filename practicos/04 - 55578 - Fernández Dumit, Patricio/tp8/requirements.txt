@@ -1,2 +1,4 @@
 streamlit
 matplotlib
+numpy
+pandas
