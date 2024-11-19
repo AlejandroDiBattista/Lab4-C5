@@ -3,6 +3,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+# En la siguiente linea se encuentra la direccion en la que ha sido publicada la aplicacion
+url = 'https://lab4-tp8git-f7bxkvwkganavsmiop57my.streamlit.app/'
+
 @st.cache_data
 def cargar_datos(archivo):
     return pd.read_csv(archivo)
