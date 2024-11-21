@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+## ATENCION: Debe colocar la direccion en la que ha sido publicada la aplicacion en la siguiente linea\
+# url = https://tp8-59184.streamlit.app/
 
 # Mostrar información del alumno
 def mostrar_informacion_alumno():
