@@ -99,12 +99,12 @@ else:
 
 
 ## ATENCION: Debe colocar la direccion en la que ha sido publicada la aplicacion en la siguiente linea\
-# url = 'https://tp8-555555.streamlit.app/'
+# url = 'https://parciallab-tw4chvrcddsgk3gtt7gzpa.streamlit.app/'
 
 def mostrar_informacion_alumno():
     with st.container(border=True):
         st.markdown('**Legajo:** 59152')
-        st.markdown('**Nombre:** Lopez Chipolo Nahuel Agustin')
+        st.markdown('**Nombre:** Lopez Chipoloni Nahuel Agustin')
         st.markdown('**Comisión:** C5')
 
 mostrar_informacion_alumno()
