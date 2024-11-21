@@ -6,33 +6,47 @@ import matplotlib.pyplot as plt
 ## ATENCION: Debe colocar la direccion en la que ha sido publicada la aplicacion en la siguiente linea\
 # url = 'https://tp8-59154.streamlit.app/'
 
-# Función para calcular y graficar evolución de ventas
+# Función para generar el gráfico de evolución de ventas
 def generar_grafico_evolucion(data, producto):
     ventas = data.groupby(["Año", "Mes"])["Unidades_vendidas"].sum().reset_index()
     fechas = range(len(ventas))
     
     # Crear gráfico de evolución
-    fig, ax = plt.subplots(figsize=(10, 5))
-    ax.plot(fechas, ventas["Unidades_vendidas"], label=f"{producto}", marker='o', linestyle='-', color='blue')
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(
+        fechas,
+        ventas["Unidades_vendidas"],
+        label=f"{producto}",
+        marker='o',
+        linestyle='-',
+        color='blue'  # Línea de ventas en azul
+    )
     
     # Calcular línea de tendencia
     x = np.arange(len(ventas))
     y = ventas["Unidades_vendidas"]
     coeficientes = np.polyfit(x, y, 1)
     tendencia = np.poly1d(coeficientes)
-    ax.plot(x, tendencia(x), linestyle="--", color="red", label="Tendencia")
+    ax.plot(
+        x,
+        tendencia(x),
+        linestyle="--",
+        linewidth=2,
+        color="red",  # Línea de tendencia en rojo
+        label="Tendencia"
+    )
     
     # Configuración del gráfico
-    ax.set_title(f"Evolución Mensual de Ventas - {producto}")
-    ax.set_xlabel("Tiempo (Año-Mes)")
-    ax.set_ylabel("Unidades Vendidas")
-    ax.grid(True)
-    ax.legend()
+    ax.set_title(f"Evolución de Ventas Mensual - {producto}", fontsize=14, fontweight="bold")
+    ax.set_xlabel("Año-Mes", fontsize=12)
+    ax.set_ylabel("Unidades Vendidas", fontsize=12)
+    ax.grid(True, linestyle="--", alpha=0.7)
+    ax.legend(fontsize=10)
     
-    # Configurar etiquetas para el eje x
+    # Configurar etiquetas para el eje X en formato Año-Mes (YYYY-MM)
     etiquetas = [f"{fila.Año}-{fila.Mes:02}" for fila in ventas.itertuples()]
-    ax.set_xticks(fechas)
-    ax.set_xticklabels(etiquetas, rotation=45, ha='right', fontsize=8)
+    ax.set_xticks(fechas[::6])  # Mostrar etiquetas espaciadas cada 6 meses
+    ax.set_xticklabels(etiquetas[::6], rotation=45, ha='right', fontsize=9)
     plt.tight_layout()
     
     return fig
