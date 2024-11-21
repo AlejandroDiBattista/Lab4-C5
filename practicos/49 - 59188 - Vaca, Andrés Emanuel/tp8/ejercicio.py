@@ -109,7 +109,7 @@ def mostrar_graficos(datos, sucursal):
                 datos_producto["Tendencia"] = m * x + b
 
          
-            fig, ax = plt.subplots(figsize=(10, 6))
+            fig, ax = plt.subplots(figsize=(10, 6.2))
             ax.plot(datos_producto['Fecha'], datos_producto['Unidades_vendidas'], label='Unidades Vendidas', color='blue')
 
           
