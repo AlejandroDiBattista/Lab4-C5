@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # URL de la aplicación publicada
-url = 'https://tp8-555555.streamlit.app/'
+url = 'https://tp8-58866.streamlit.app/'
 
 def mostrar_informacion_alumno():
     st.markdown(
@@ -79,7 +79,6 @@ def mostrar_informacion(datos):
     st.header(f"Datos de {'Todas las Sucursales' if sucursal == 'Todas' else sucursal}")
     productos = datos['Producto'].unique()
     
-    # CSS para estilizar cada contenedor
     st.markdown(
         """
         <style>
@@ -97,10 +96,8 @@ def mostrar_informacion(datos):
     )
 
     for producto in productos:
-        # Contenedor estilizado para cada producto
         st.markdown(f'<div class="info-container">', unsafe_allow_html=True)
 
-        # Incluir columnas y gráfico dentro del contenedor
         col1, col2 = st.columns([1, 2], gap="large")
 
         with col1:
@@ -113,7 +110,6 @@ def mostrar_informacion(datos):
 
             cambio_precio, cambio_margen, cambio_unidades = calcular_cambios(datos, producto)
 
-            # Mostrar métricas con porcentajes
             st.metric("Precio Promedio", f"${precio_promedio:,.2f}", f"{cambio_precio:+.2f}%", delta_color="inverse")
             st.metric("Margen Promedio", f"{margen_promedio:.2f}%", f"{cambio_margen:+.2f}%", delta_color="inverse")
             st.metric("Unidades Vendidas", f"{unidades_vendidas:,.0f}", f"{cambio_unidades:+.2f}%", delta_color="inverse")
@@ -122,7 +118,6 @@ def mostrar_informacion(datos):
             fig = graficar_evolucion(datos, producto)
             st.pyplot(fig)
 
-        # Cierre del contenedor estilizado
         st.markdown('</div>', unsafe_allow_html=True)
 
 def main():
