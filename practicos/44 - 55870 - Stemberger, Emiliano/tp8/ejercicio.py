@@ -60,7 +60,6 @@ if archivo_subido:
 
     sucursales = ["Todas"] + sorted(df["Sucursal"].unique().tolist())
     sucursal_seleccionada = st.sidebar.selectbox("Escoge una Sucursal", sucursales)
-
     if sucursal_seleccionada != "Todas":
         df = df[df["Sucursal"] == sucursal_seleccionada]
         st.title(f"Datos de {sucursal_seleccionada}")
@@ -68,7 +67,6 @@ if archivo_subido:
         st.title("Datos de Todas las Sucursales")
 
     productos = df["Producto"].unique()
-
     for producto in productos:
         with st.container(border=True):
             st.subheader(f"{producto}")
