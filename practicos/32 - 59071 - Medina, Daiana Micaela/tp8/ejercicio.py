@@ -15,6 +15,7 @@ def mostrar_informacion_alumno():
 def calcular_metricas(df):
     df['Precio Promedio'] = df['Ingreso_total'] / df['Unidades_vendidas']
     df['Margen'] = ((df['Ingreso_total'] - df['Costo_total']) / df['Ingreso_total']) * 100
+    
     return df
 
 def calcular_variaciones(df):
@@ -62,7 +63,6 @@ def graficar_evolucion(df, producto):
         return
 
     plt.figure(figsize=(10, 6))
-
     plt.plot(
         datos_producto['Fecha'], 
         datos_producto['Unidades_vendidas'], 

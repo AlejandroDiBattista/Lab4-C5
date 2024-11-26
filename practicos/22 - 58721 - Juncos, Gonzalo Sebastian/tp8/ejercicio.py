@@ -75,6 +75,7 @@ def procesar_datos(df, sucursal_seleccionada):
 def calcular_metricas(df):
     df['Precio Promedio'] = df['Ingreso_total'] / df['Unidades_vendidas']
     df['Margen'] = ((df['Ingreso_total'] - df['Costo_total']) / df['Ingreso_total']) * 100
+    
     return df
 
 def calcular_variaciones(df):

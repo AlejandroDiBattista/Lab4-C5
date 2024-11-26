@@ -95,9 +95,9 @@ if archivo_subido is not None:
         col1, col2 = st.columns([0.25, 0.75])
         
         with col1:
-            st.metric(label="Precio Promedio", value=f"${valores_producto['Precio_promedio'].mean():,.0f}".replace(",", "."), delta=f"{cambio_precio_promedio_anual:.2f}%")
+            st.metric(label="Precio Promedio", value=f"${valores_producto['Precio_promedio'].mean():,.2f}".replace(",", "."), delta=f"{cambio_precio_promedio_anual:.2f}%")
             st.metric(label="Margen Promedio", value=f"{valores_producto['Margen'].mean():,.0f}%".replace(",", "."), delta=f"{cambio_margen_promedio_anual:.2f}%")
-            st.metric(label="Unidades Vendidas", value=f"{valores_producto['unidades_vendidas'].sum():,.0f}".replace(",", "."), delta=f"{cambio_unidades_vendidas_anual:.2f}%")
+            st.metric(label="Unidades Vendidas", value=f"{valores_producto['unidades_vendidas'].sum():,.2f}".replace(",", "."), delta=f"{cambio_unidades_vendidas_anual:.2f}%")
         
         with col2:
             fig = crear_grafico_ventas(datos_producto, producto)

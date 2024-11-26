@@ -22,6 +22,7 @@ def calcular_metricas(df):
 
     df['Precio Promedio'] = df['Precio Promedio'].fillna(0)
     df['Margen'] = df['Margen'].fillna(0)
+    
     return df
 
 def calcular_variaciones(df):

@@ -21,10 +21,12 @@ def set_seaborn_style(font_family, background_color, grid_color, text_color):
     sns.set_style({
         "axes.facecolor": background_color,
         "figure.facecolor": background_color,
+
         "grid.color": grid_color,
         "axes.edgecolor": grid_color,
         "axes.grid": True,
         "axes.axisbelow": True,
+        
         "axes.labelcolor": text_color,
         "text.color": text_color,
         "font.family": font_family,
@@ -126,6 +128,4 @@ def main():
         prod = Producto(producto, datos_producto)
         prod.tarjeta()
 
-if __name__ == "__main__":
-    st.set_page_config(page_title="Dashboard de Ventas", layout="wide")
-    main()
+main()

@@ -100,19 +100,15 @@ if cargar_archivo is not None:
             datos_producto['Precio_promedio'] = datos_producto['Ingreso_total'] / datos_producto['Unidades_vendidas']
             precio_promedio = round(datos_producto['Precio_promedio'].mean())
             
-            
             precio_promedio_anual = datos_producto.groupby('year')['Precio_promedio'].mean()
             variacion_precio_promedio_anual = round(precio_promedio_anual.pct_change().mean() * 100, 2)
             
-            
             datos_producto['Ganancia'] = datos_producto['Ingreso_total'] - datos_producto['Costo_total']
             datos_producto['Margen'] = (datos_producto['Ganancia'] / datos_producto['Ingreso_total']) * 100
+           
             margen_promedio = round(datos_producto['Margen'].mean())
-            
-            
             margen_promedio_anual = datos_producto.groupby('year')['Margen'].mean()
             variacion_margen_promedio_anual = round(margen_promedio_anual.pct_change().mean() * 100, 2)
-            
             
             unidades_promedio = round(datos_producto['Unidades_vendidas'].mean())
             unidades_vendidas = round(datos_producto['Unidades_vendidas'].sum())

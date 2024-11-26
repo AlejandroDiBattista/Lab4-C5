@@ -74,6 +74,7 @@ if archivo_subido:
             datos_producto = df[df["Producto"] == producto]
 
             datos_producto['Precio_promedio'] = datos_producto['Ingreso_total'] / datos_producto['Unidades_vendidas']
+            
             datos_producto['Ganancia'] = datos_producto['Ingreso_total'] - datos_producto['Costo_total']
             datos_producto['Margen'] = (datos_producto['Ganancia'] / datos_producto['Ingreso_total']) * 100
 
