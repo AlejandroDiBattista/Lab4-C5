@@ -37,8 +37,8 @@ if archivo:
         
         with st.container(border=True):
             dato_producto_agrupado["Año_x_Mes"] = pd.to_datetime(dato_producto_agrupado["Año"].astype(str) + "-" + dato_producto_agrupado["Mes"].astype(str).str.zfill(2))
-            rango_tiempo = pd.DataFrame({"Año_x_Mes": pd.date_range(start=dato_producto_agrupado["Año_x_Mes"].min(),end=dato_producto_agrupado["Año_x_Mes"].max(),freq="MS")})
-            dato_producto_agrupado = rango_tiempo.merge(dato_producto_agrupado, on="Año_x_Mes", how="left").fillna(0)
+            full_range = pd.DataFrame({"Año_x_Mes": pd.date_range(start=dato_producto_agrupado["Año_x_Mes"].min(),end=dato_producto_agrupado["Año_x_Mes"].max(),freq="MS")})
+            dato_producto_agrupado = full_range.merge(dato_producto_agrupado, on="Año_x_Mes", how="left").fillna(0)
 
             dato_producto_agrupado["Unidades_vendidas_suavizadas"] = dato_producto_agrupado["Unidades_vendidas"].rolling(window=6, min_periods=1).mean()
 
