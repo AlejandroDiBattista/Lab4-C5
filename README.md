@@ -1,4 +1,4 @@
-## Comisión 2 (37)
+## Comisión 5 [54]
 
 
 #### Resultados de la evaluación del segundo parcial.
@@ -8,56 +8,73 @@
 > La recuperación debe ser *realizada y subida adecuadamente* hasta el **jueves al mediodía**.
             
 
-### Aprobados (26) 
-* `01` | **58764**  | Acuña, Ana Sofía
-* `02` | **59277**  | Aguirre, Emanuel
-* `03` | **58829**  | Albornoz Silva, Alejo Miguel
-* `06` | **58828**  | Alvarez, Nicolás Nahuel
-* `07` | **59176**  | Argañaraz, Facundo Nahuel
-* `08` | **58909**  | Argañaraz, Leonardo Ramiro
-* `09` | **50665**  | Arias Olaiz, Marcos Ignacio
-* `10` | **59078**  | Bazan, Bruno Gabriel
-* `14` | **59234**  | Chocobar, Matías Sebastián
-* `13` | **58865**  | Chávez, Pedro Ismael
-* `15` | **59268**  | Cordoba, Pedro Josue
-* `16` | **58732**  | Coronel, Sergio Antonio
-* `17` | **59423**  | Esper, Rodrigo Fernando
-* `18` | **55530**  | Fernández, Agustín Alejo
-* `19` | **59130**  | Gatti, Luciano Alberto
-* `23` | **58782**  | Goyechea, María de los Angeles
-* `25` | **58777**  | Jassán, Alan
-* `26` | **55751**  | Jérez, Francisco David
-* `27` | **58943**  | Maza, Santiago Martín
-* `28` | **55650**  | Moyano, Iván Eduardo
-* `29` | **58907**  | Nuñez, Walter Exequiel
-* `31` | **58808**  | Rodríguez, Nahuel Federico
-* `35` | **59450**  | Skibski, Ignacio
-* `33` | **58942**  | Sánchez Ortiz, Hernán
-* `36` | **59451**  | Urueña, Karen Florencia
-* `37` | **59160**  | Veneziano, Juan Ignacio
+### Aprobados (19) 
+* `04` | **55578**  | Fernández Dumit, Patricio
+* `07` | **58723**  | Figueroa, Santiago Isaac
+* `10` | **59154**  | García, Máximo
+* `16` | **58720**  | Gonzalez, Martín Natanael
+* `17` | **59068**  | Gonzalez, Silvina Mariela
+* `20` | **58761**  | Juarez, Lautaro Andres En
+* `23` | **59070**  | Ladina, Maia Agostina
+* `26` | **58727**  | Lazarte, Lucas
+* `29` | **59726**  | Lopez, Fausto Agustin
+* `27` | **59152**  | Lopez Chipoloni, Agustin
+* `30` | **58729**  | Lovey, Mathias Exequiel
+* `31` | **59184**  | Lucena, Matías Leandro
+* `32` | **59071**  | Medina, Daiana Micaela
+* `41` | **58806**  | Rojas, Carlos Augusto
+* `43` | **58873**  | Salazar, Enzo Gabriel
+* `44` | **55870**  | Stemberger, Emiliano
+* `45` | **58845**  | Terrera, Augusto Dante
+* `47` | **57543**  | Touceda, Federico
+* `50` | **58866**  | Velázquez, Tobias Alejo
 
-### Recuperar (4)
+### Recuperar (24)
 
 ##### Debe corregir los resultados 
-* `04` | **58952**  | Almiron, Maicol Leonel
+* `06` | **55249**  | Fernandez, Gonzalo Tomas
+* `05` | **58735**  | Fernandez Gomez, Manuel A
+* `11` | **58740**  | García, Sergio Martín
+* `15` | **59488**  | González, Mariano Emanuel
+* `14` | **58894**  | González Nacusse, Flavia
+* `12` | **59076**  | Gómez Martínez, Matías Lionel
+* `18` | **58687**  | Jadur, Sofía Nahir
+* `21` | **58758**  | Juarez, Milagro Macarena
+* `22` | **58721**  | Juncos, Gonzalo Sebastian
+* `28` | **58724**  | Lopez Garcia, Marcos Julio
+* `33` | **59099**  | Moyano Berrondo, Tahiel
+* `34` | **58805**  | Prieto, Matías Hernan
+* `36` | **58766**  | Reinoso, Lisandro Gabriel
+* `38` | **58753**  | Rivadeneira, Lautaro
+* `39` | **58951**  | Robles, Ezequiel
+* `49` | **59188**  | Vaca, Andrés Emanuel
 
 ##### Debe corregir la presentacion 
-* `12` | **47121**  | Caram, Jesús Nicolás
-* `32` | **47417**  | Rosales, José Ignacio
+* `25` | **58756**  | Lazarte, Agustina Milagro
+* `48` | **59064**  | Urbani, Juan Pablo
 
 ##### Debe corregir resultados y presentación 
-* `21` | **55533**  | González, Luciano Leandro
+* `03` | **58773**  | Ellí Salazar, Gerónimo
+* `08` | **58895**  | Flores Gonzalez, Tomás Agustín
+* `09` | **58734**  | Galván, Víctor Mateo
+* `19` | **58736**  | Juarez Hindi, Lucas David
+* `37` | **52142**  | Reyes Gordillo, Rodrigo M
+* `40` | **58686**  | Rodriguez, Gustavo
 
-#### Desaprobados <small>(3)</small>
-* `05` | **58731**  | Alvarez, Nicolás
-* `24` | **55940**  | Gramajo, Elba Virginia Maria
-* `34` | **59424**  | Selis, Daiana Betsabé
+#### Desaprobados <small>(2)</small>
+* `35` | **59054**  | Rahman Rintoul, Ramiro
+* `51` | **58899**  | Villagra, Juan Gabriel
 
-#### No presentaron <small>(4)</small>
-* `11` | **49185**  | Bett, Matías Alejandro
-* `20` | **58832**  | González, Adrián Leonel
-* `22` | **55906**  | González, Ramiro Exequiel
-* `30` | **59555**  | Reynoso, Lucas Facundo
+#### No presentaron <small>(9)</small>
+* `54` | **55600**  | Cañete Jacobo, Juan Manuel
+* `01` | **58690**  | Díaz, Facundo Gabriel
+* `02` | **58876**  | Díaz, Manuel Lautaro
+* `13` | **59135**  | Gómez, Facundo Matías
+* `24` | **58737**  | Lasagna, Manuel
+* `52` | **58874**  | Rigazio, Malena Soledad
+* `42` | **58692**  | Rosselo Salas, Maia Josefina
+* `46` | **59052**  | Teseira, Lucas Benjamin
+* `53` | **59909**  | Wierna, María Belén
 
 ## ¿Cómo recuperar el trabajo?
 **Para promocionar la materia, tanto los resultados como la presentación deben estar correctos.**
