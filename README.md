@@ -1,24 +1,22 @@
 ## Comisión 5 [54]
 
-
 #### Resultados de la evaluación del segundo parcial.
 
 > Los alumnos que presentaron el trabajo en tiempo y forma, pero tienen errores en los resultados y/o la presentación, pueden recuperar para acceder a la aprobación directa (si cumplen las demás condiciones).
 >
 > La recuperación debe ser *realizada y subida adecuadamente* hasta el **jueves al mediodía**.
-            
 
 ### Aprobados (19) 
 * `04` | **55578**  | Fernández Dumit, Patricio
 * `07` | **58723**  | Figueroa, Santiago Isaac
 * `10` | **59154**  | García, Máximo
-* `16` | **58720**  | Gonzalez, Martín Natanael
-* `17` | **59068**  | Gonzalez, Silvina Mariela
-* `20` | **58761**  | Juarez, Lautaro Andres En
+* `16` | **58720**  | González, Martín Natanael
+* `17` | **59068**  | González, Silvina Mariela
+* `20` | **58761**  | Juárez, Lautaro Andrés
 * `23` | **59070**  | Ladina, Maia Agostina
 * `26` | **58727**  | Lazarte, Lucas
-* `29` | **59726**  | Lopez, Fausto Agustin
-* `27` | **59152**  | Lopez Chipoloni, Agustin
+* `29` | **59726**  | López, Fausto Agustín
+* `27` | **59152**  | López Chipoloni, Agustín
 * `30` | **58729**  | Lovey, Mathias Exequiel
 * `31` | **59184**  | Lucena, Matías Leandro
 * `32` | **59071**  | Medina, Daiana Micaela
@@ -27,42 +25,40 @@
 * `44` | **55870**  | Stemberger, Emiliano
 * `45` | **58845**  | Terrera, Augusto Dante
 * `47` | **57543**  | Touceda, Federico
-* `50` | **58866**  | Velázquez, Tobias Alejo
+* `50` | **58866**  | Velázquez, Tobías Alejo
 
 ### Recuperar (24)
 
 ##### Debe corregir los resultados 
-* `06` | **55249**  | Fernandez, Gonzalo Tomas
-* `05` | **58735**  | Fernandez Gomez, Manuel A
+* `06` | **55249**  | Fernández, Gonzalo Tomás
+* `05` | **58735**  | Fernández Gómez, Manuel A.
 * `11` | **58740**  | García, Sergio Martín
 * `15` | **59488**  | González, Mariano Emanuel
 * `14` | **58894**  | González Nacusse, Flavia
 * `12` | **59076**  | Gómez Martínez, Matías Lionel
 * `18` | **58687**  | Jadur, Sofía Nahir
-* `21` | **58758**  | Juarez, Milagro Macarena
-* `22` | **58721**  | Juncos, Gonzalo Sebastian
-* `28` | **58724**  | Lopez Garcia, Marcos Julio
+* `21` | **58758**  | Juárez, Milagro Macarena
+* `22` | **58721**  | Juncos, Gonzalo Sebastián
+* `28` | **58724**  | López García, Marcos Julio
 * `33` | **59099**  | Moyano Berrondo, Tahiel
-* `34` | **58805**  | Prieto, Matías Hernan
+* `34` | **58805**  | Prieto, Matías Hernán
 * `36` | **58766**  | Reinoso, Lisandro Gabriel
 * `38` | **58753**  | Rivadeneira, Lautaro
 * `39` | **58951**  | Robles, Ezequiel
 * `49` | **59188**  | Vaca, Andrés Emanuel
 
-##### Debe corregir la presentacion 
+##### Debe corregir la presentación 
 * `25` | **58756**  | Lazarte, Agustina Milagro
 * `48` | **59064**  | Urbani, Juan Pablo
 
 ##### Debe corregir resultados y presentación 
 * `03` | **58773**  | Ellí Salazar, Gerónimo
-* `08` | **58895**  | Flores Gonzalez, Tomás Agustín
+* `08` | **58895**  | Flores González, Tomás Agustín
 * `09` | **58734**  | Galván, Víctor Mateo
-* `19` | **58736**  | Juarez Hindi, Lucas David
-* `37` | **52142**  | Reyes Gordillo, Rodrigo M
-* `40` | **58686**  | Rodriguez, Gustavo
-
-#### Desaprobados <small>(2)</small>
+* `19` | **58736**  | Juárez Hindi, Lucas David
 * `35` | **59054**  | Rahman Rintoul, Ramiro
+* `37` | **52142**  | Reyes Gordillo, Rodrigo M.
+* `40` | **58686**  | Rodríguez, Gustavo
 * `51` | **58899**  | Villagra, Juan Gabriel
 
 #### No presentaron <small>(9)</small>
@@ -73,7 +69,7 @@
 * `24` | **58737**  | Lasagna, Manuel
 * `52` | **58874**  | Rigazio, Malena Soledad
 * `42` | **58692**  | Rosselo Salas, Maia Josefina
-* `46` | **59052**  | Teseira, Lucas Benjamin
+* `46` | **59052**  | Teseira, Lucas Benjamín
 * `53` | **59909**  | Wierna, María Belén
 
 ## ¿Cómo recuperar el trabajo?
@@ -92,15 +88,15 @@ Tomen los siguientes valores como referencia <small>(✦ Valores redondeados)</s
 En la presentación debe reflejar la imagen de referencia.
 - No debe mostrar ninguna tabla de datos.
 - No debe tener ningún HTML o CSS para personalizar la presentación.
-- La informacion de los productos deben estar con borde 
-            `usar st.container(border=True)`.
+- La información de los productos debe estar con borde 
+      `usar st.container(border=True)`.
 - Las estadísticas deben mostrarse como métricas 
-            `usar st.metric`.
+      `usar st.metric`.
 - Las métricas deben mostrarse verticalmente.
 - Las métricas deben estar en una columna a la izquierda del gráfico 
-            `ocupando un 25%`.
-- El gráfico debe estar a la decha 
-            `ocupando el 75% restante`.
+      `ocupando un 25%`.
+- El gráfico debe estar a la derecha 
+      `ocupando el 75% restante`.
 - La carga de datos se realiza en el panel lateral.    
 - Los datos del usuario solo se muestran cuando no hay datos cargados.
 
@@ -109,7 +105,7 @@ En la presentación debe reflejar la imagen de referencia.
 Los alumnos que deben recuperar deben presentar el trabajo corregido hasta el **jueves al mediodía**.
 
 > **Nota:** Asegúrense de trabajar sobre la última versión de los archivos, bajando los datos antes de hacer la rama con las correcciones.
-            Si tiene dudas puede consultar por el grupo de WhatsApp de la comisión.
+      Si tienen dudas pueden consultar por el grupo de WhatsApp de la comisión.
 
 #### Imagen de referencia             
 ![Pantalla Principal](./practicos/enunciados/pantalla1.png)
