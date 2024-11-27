@@ -30,12 +30,12 @@
 ### Recuperar (24)
 
 ##### Debe corregir los resultados 
-* `06` | **55249**  | Fernández, Gonzalo Tomás
 * `05` | **58735**  | Fernández Gómez, Manuel A.
+* `06` | **55249**  | Fernández, Gonzalo Tomás
 * `11` | **58740**  | García, Sergio Martín
-* `15` | **59488**  | González, Mariano Emanuel
-* `14` | **58894**  | González Nacusse, Flavia
 * `12` | **59076**  | Gómez Martínez, Matías Lionel
+* `14` | **58894**  | González Nacusse, Flavia
+* `15` | **59488**  | González, Mariano Emanuel
 * `18` | **58687**  | Jadur, Sofía Nahir
 * `21` | **58758**  | Juárez, Milagro Macarena
 * `22` | **58721**  | Juncos, Gonzalo Sebastián
@@ -62,15 +62,15 @@
 * `51` | **58899**  | Villagra, Juan Gabriel
 
 #### No presentaron <small>(9)</small>
-* `54` | **55600**  | Cañete Jacobo, Juan Manuel
 * `01` | **58690**  | Díaz, Facundo Gabriel
 * `02` | **58876**  | Díaz, Manuel Lautaro
 * `13` | **59135**  | Gómez, Facundo Matías
 * `24` | **58737**  | Lasagna, Manuel
-* `52` | **58874**  | Rigazio, Malena Soledad
 * `42` | **58692**  | Rosselo Salas, Maia Josefina
 * `46` | **59052**  | Teseira, Lucas Benjamín
+* `52` | **58874**  | Rigazio, Malena Soledad
 * `53` | **59909**  | Wierna, María Belén
+* `54` | **55600**  | Cañete Jacobo, Juan Manuel
 
 ## ¿Cómo recuperar el trabajo?
 **Para promocionar la materia, tanto los resultados como la presentación deben estar correctos.**
