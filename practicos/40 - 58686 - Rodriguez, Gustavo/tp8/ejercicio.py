@@ -3,100 +3,97 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-## ATENCION: Debe colocar la direccion en la que ha sido publicada la aplicacion en la siguiente linea\
-# url = https://parcialexcersise-akecznnvhndeuryzrdjbc2.streamlit.app/
+
+url = 'https://tp8-58686-gustavorodriguez.streamlit.app/'
 
 
-def mostrar_informacion_alumno():
-    st.sidebar.header("Información")
-    st.sidebar.write("**Legajo:** 58.686")
-    st.sidebar.write("**Nombre:** Gustavo Rodriguez")
-    st.sidebar.write("**Comisión:** C5")
+def mostrar_info():
+    st.write("-------------------")
+    st.write("Legajo: 58.686")
+    st.write("Nombre: Gustavo Rodriguez")
+    st.write("Comisión: C5")
+    st.write("-------------------")
 
 
-def cargar_datos():
-    st.sidebar.header("Cargar archivo de datos")
-    archivo = st.sidebar.file_uploader("Subir archivo CSV de datos", type="csv")
-    if archivo is not None:
-        datos = pd.read_csv(archivo)
-        st.sidebar.success("Archivo cargado correctamente.")
-        
-        if "Año" in datos.columns and "Mes" in datos.columns:
-            datos['Fecha'] = pd.to_datetime(datos['Año'].astype(str) + '-' + datos['Mes'].astype(str) + '-01', errors="coerce")
+def crear_grafico(tabla, producto):
+    ventas_agrupadas = tabla.groupby(['Año', 'Mes'])['Unidades_vendidas'].sum().reset_index()
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(range(len(ventas_agrupadas)), ventas_agrupadas['Unidades_vendidas'], label=producto, linewidth=2)
+    
+    eje_x = range(len(ventas_agrupadas))
+    eje_y = ventas_agrupadas['Unidades_vendidas']
+    coef_tendencia = np.polyfit(eje_x, eje_y, 1)
+    linea_tendencia = np.poly1d(coef_tendencia)
+    plt.plot(eje_x, linea_tendencia(eje_x), '--r', label='Tendencia')
+    
+    plt.title('Evolución de Ventas Mensual', fontsize=14)
+    plt.xlabel('Meses', fontsize=12)
+    plt.ylabel('Unidades Vendidas', fontsize=12)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    
+    etiquetas_meses = []
+    for fila in ventas_agrupadas.itertuples():
+        if fila.Mes == 1:
+            etiquetas_meses.append(str(fila.Año))
         else:
-            st.error("El archivo necesita las columnas 'Año' y 'Mes'.")
-            return None
-        
-        for col in ["Unidades_vendidas", "Ingreso_total", "Costo_total"]:
-            if col in datos.columns:
-                datos[col] = pd.to_numeric(datos[col], errors="coerce")
-        
-        return datos
-    else:
-        st.warning("Por favor, sube un archivo CSV desde la barra lateral.")
-        return None
-
-def calcular_metricas(datos, sucursal=None):
-    if sucursal:
-        datos = datos[datos["Sucursal"] == sucursal]
+            etiquetas_meses.append("")
     
-    metricas = datos.groupby("Producto").agg({
-        "Unidades_vendidas": "sum",
-        "Ingreso_total": "sum",
-        "Costo_total": "sum"
-    }).reset_index()
+    plt.xticks(range(len(ventas_agrupadas)), etiquetas_meses)
+    plt.legend(fontsize=12)
     
-    metricas["Precio_promedio"] = metricas["Ingreso_total"] / metricas["Unidades_vendidas"]
-    metricas["Margen_promedio"] = (metricas["Ingreso_total"] - metricas["Costo_total"]) / metricas["Ingreso_total"]
-    
-    return metricas
-
-def graficar_ventas(datos, producto):
-    datos_producto = datos[datos["Producto"] == producto].groupby("Fecha").agg({
-        "Unidades_vendidas": "sum"
-    }).reset_index()
-
-    if datos_producto.empty:
-        st.warning(f"No hay ventas para el producto: {producto}.")
-        return
-
-    if len(datos_producto) > 1:
-        datos_producto["Tendencia"] = np.poly1d(np.polyfit(
-            np.arange(len(datos_producto)), datos_producto["Unidades_vendidas"], 1
-        ))(np.arange(len(datos_producto)))
-    
-        plt.figure(figsize=(8, 5))
-        plt.plot(datos_producto["Fecha"], datos_producto["Unidades_vendidas"], label=producto, color="blue")
-        plt.plot(datos_producto["Fecha"], datos_producto["Tendencia"], linestyle="--", color="red", label="Tendencia")
-        plt.xlabel("Fecha")
-        plt.ylabel("Unidades Vendidas")
-        plt.title(f"Ventas Mensuales - {producto}")
-        plt.legend()
-        plt.grid()
-        st.pyplot(plt)
+    return plt.gcf()
 
 
-def main():
+def principal():
     st.set_page_config(layout="wide")
-    st.title("Análisis de Ventas")
-   
-    mostrar_informacion_alumno()
+    st.sidebar.header("Subir Archivo")
+    archivo_subido = st.sidebar.file_uploader("Pon tu archivo CSV aquí", type=["csv"])
     
-    datos = cargar_datos()
-    if datos is not None:
-        sucursal = st.sidebar.selectbox("Seleccionar Sucursal", options=["Todas"] + datos["Sucursal"].unique().tolist())
-        datos_filtrados = datos if sucursal == "Todas" else datos[datos["Sucursal"] == sucursal]
-
-        st.header(f"Datos de la Sucursal: {sucursal}")
-        metricas = calcular_metricas(datos_filtrados)
-        
-        for _, fila in metricas.iterrows():
-            st.subheader(fila["Producto"])
-            col1, col2, col3 = st.columns(3)
-            col1.metric("Precio Promedio", f"${fila['Precio_promedio']:.2f}")
-            col2.metric("Margen Promedio", f"{fila['Margen_promedio'] * 100:.2f}%")
-            col3.metric("Unidades Vendidas", f"{fila['Unidades_vendidas']:.0f}")
-            graficar_ventas(datos_filtrados, fila["Producto"])
+    if archivo_subido is not None:
+        tabla_datos = pd.read_csv(archivo_subido)
+        lista_sedes = ["Todas"] + tabla_datos['Sucursal'].unique().tolist()
+        sede_seleccionada = st.sidebar.selectbox("Seleccionar Sucursal", lista_sedes)
+    
+        if sede_seleccionada != "Todas":
+            tabla_datos = tabla_datos[tabla_datos['Sucursal'] == sede_seleccionada]
+            st.title(f"Datos de {sede_seleccionada}")
+        else:
+            st.title("Datos de Todas las Sucursales")
+        lista_articulos = tabla_datos['Producto'].unique()
+        for articulo in lista_articulos:
+            with st.container(border=True):
+                st.subheader(f"{articulo}")
+                datos_articulo = tabla_datos[tabla_datos['Producto'] == articulo]
+                datos_articulo['Precio_promedio'] = datos_articulo['Ingreso_total'] / datos_articulo['Unidades_vendidas']
+                promedio_precio = datos_articulo['Precio_promedio'].mean()
+                promedio_precio_anual = datos_articulo.groupby('Año')['Precio_promedio'].mean()
+                variacion_precio_anual = promedio_precio_anual.pct_change().mean() * 100
+                
+                datos_articulo['Ganancia'] = datos_articulo['Ingreso_total'] - datos_articulo['Costo_total']
+                datos_articulo['Margen'] = (datos_articulo['Ganancia'] / datos_articulo['Ingreso_total']) * 100
+                promedio_margen = datos_articulo['Margen'].mean()
+                promedio_margen_anual = datos_articulo.groupby('Año')['Margen'].mean()
+                variacion_margen_anual = promedio_margen_anual.pct_change().mean() * 100
+                
+                promedio_unidades = datos_articulo['Unidades_vendidas'].mean()
+                total_unidades_vendidas = datos_articulo['Unidades_vendidas'].sum()
+                unidades_agrupadas_anual = datos_articulo.groupby('Año')['Unidades_vendidas'].sum()
+                variacion_unidades_anual = unidades_agrupadas_anual.pct_change().mean() * 100
+                
+                columna_metrica, columna_visual = st.columns([0.25, 0.75])
+                
+                with columna_metrica:
+                    st.metric(label="Precio Promedio", value=f"${promedio_precio:,.0f}".replace(",", "."), delta=f"{variacion_precio_anual:.2f}%")
+                    st.metric(label="Margen Promedio", value=f"{promedio_margen:.0f}%".replace(",", "."), delta=f"{variacion_margen_anual:.2f}%")
+                    st.metric(label="Unidades Vendidas", value=f"{total_unidades_vendidas:,.0f}".replace(",", "."), delta=f"{variacion_unidades_anual:.2f}%")
+                
+                with columna_visual:
+                    grafico = crear_grafico(datos_articulo, articulo)
+                    st.pyplot(grafico)
+    else:
+        st.write("### INFORMACIÓN")
+        mostrar_info()
 
 if __name__ == "__main__":
-    main()
+    principal()
