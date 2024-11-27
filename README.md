@@ -15,8 +15,8 @@
 * `20` | **58761**  | Juárez, Lautaro Andrés
 * `23` | **59070**  | Ladina, Maia Agostina
 * `26` | **58727**  | Lazarte, Lucas
-* `29` | **59726**  | López, Fausto Agustín
 * `27` | **59152**  | López Chipoloni, Agustín
+* `29` | **59726**  | López, Fausto Agustín
 * `30` | **58729**  | Lovey, Mathias Exequiel
 * `31` | **59184**  | Lucena, Matías Leandro
 * `32` | **59071**  | Medina, Daiana Micaela
