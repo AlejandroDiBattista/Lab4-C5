@@ -7,7 +7,7 @@ from matplotlib.ticker import MultipleLocator
 
 
 ## ATENCION: Debe colocar la direccion en la que ha sido publicada la aplicacion en la siguiente linea\
-# url = 'https://qg5wmyibamihzzm6f3smkm.streamlit.app/'
+# url = 'https://tp8-correcion-7npn9jfwp22uacyjvfo9sp.streamlit.app/'
 
 def mostrar_informacion_alumno():
     with st.container():
