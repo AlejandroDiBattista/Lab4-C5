@@ -2,36 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.linear_model import LinearRegression
 
-def set_seaborn_style(font_family, background_color, grid_color, text_color):
-    sns.set_style({
-        "axes.facecolor": background_color,
-        "figure.facecolor": background_color,
-
-        "grid.color": grid_color,
-        "axes.edgecolor": grid_color,
-        "axes.grid": True,
-        "axes.axisbelow": True,
-
-        "axes.labelcolor": text_color,
-        "text.color": text_color,
-        "font.family": font_family,
-        "xtick.color": text_color,
-        "ytick.color": text_color,
-
-        "xtick.bottom": False,
-        "xtick.top": False,
-        "ytick.left": False,
-        "ytick.right": False,
-
-        "axes.spines.left": False,
-        "axes.spines.bottom": True,
-        "axes.spines.right": False,
-        "axes.spines.top": False,
-    }
-)
 
 ## ATENCION: Debe colocar la direccion en la que ha sido publicada la aplicacion en la siguiente linea\
 # url = 'https://tp8-59076.streamlit.app/'
@@ -45,7 +16,7 @@ def mostrar_informacion_alumno():
 
 def main():
 
-    mostrar_informacion_alumno()
+    
 
     class Producto:
         def __init__(self, nombre, datos):
@@ -55,81 +26,80 @@ def main():
         def tarjeta(self):
             self.datos = self.datos.copy()
 
-            df_fecha = pd.DataFrame({'year': self.datos['Año'], 'month': self.datos['Mes'], 'day': 1})
-            self.datos['fecha'] = pd.to_datetime(df_fecha)
-
-            precio_promedio = self.datos['Ingreso_total'].sum() / self.datos['Unidades_vendidas'].sum()
-            margen_promedio = (self.datos['Ingreso_total'].sum() - self.datos['Costo_total'].sum()) / self.datos['Ingreso_total'].sum() * 100
-            unidades_totales = self.datos['Unidades_vendidas'].sum()
-
-            self.datos = self.datos.sort_values(by='fecha')
-
-            resumen_mensual = self.datos.groupby('fecha').agg({
-                'Unidades_vendidas': 'sum',
-                'Ingreso_total': 'sum',
-                'Costo_total': 'sum'
-            }).reset_index()
-
-            resumen_mensual['var_unidades'] = resumen_mensual['Unidades_vendidas'].pct_change() * 100
-            resumen_mensual['var_ingreso'] = resumen_mensual['Ingreso_total'].pct_change() * 100
-            resumen_mensual['var_costo'] = resumen_mensual['Costo_total'].pct_change() * 100
+            datos_producto['Ppromedio'] = datos_producto['Ingreso_total'] / datos_producto['Unidades_vendidas']
+            promedioP = datos_producto['Ppromedio'].mean()
+            promedioPaño = datos_producto.groupby('Año')['Ppromedio'].mean()
+            variacion_promedio = promedioPaño.pct_change().mean() * 100
+            
+            
+            datos_producto['Margen'] = ((datos_producto['Ingreso_total'] - datos_producto['Costo_total']) / datos_producto['Ingreso_total']) * 100
+            promedioM = datos_producto['Margen'].mean()
+            promedioMaño = datos_producto.groupby('Año')['Margen'].mean()
+            variacion_margen = promedioMaño.pct_change().mean() * 100
+            
+            unidades = datos_producto['Unidades_vendidas'].sum()
+            unidadesAño = datos_producto.groupby('Año')['Unidades_vendidas'].sum()
+            variacion_unidades = unidadesAño.pct_change().mean() * 100
 
             with st.container(border=True):
                 st.subheader(self.nombre)
-                col1, col2 = st.columns([1, 2])
+                col1, col2 = st.columns([0.25, 0.75])
 
                 with col1:
-                    st.metric("Precio Promedio", f"${precio_promedio:,.2f}", f"{resumen_mensual['var_ingreso'].iloc[-1]:.2f}%")
-                    st.metric("Margen Promedio", f"{margen_promedio:.2f}%", f"{resumen_mensual['var_costo'].iloc[-1]:.2f}%")
-                    st.metric("Unidades Vendidas", f"{unidades_totales:,.0f}", f"{resumen_mensual['var_unidades'].iloc[-1]:.2f}%")
+                    st.metric("Precio Promedio", f"${promedioP:,.2f}", f"{variacion_promedio:.2f}%")
+                    st.metric("Margen Promedio", f"{promedioM:.2f}%", f"{variacion_margen:.2f}%")
+                    st.metric("Unidades Vendidas", f"{unidades:,.0f}", f"{variacion_unidades:.2f}%")
 
                 with col2:
-                    set_seaborn_style('Arial', "#042940", "#005C53", "#D6D58E")
 
-                    fig, ax = plt.subplots(figsize=(6, 4))
+                    ventas = datos_producto.groupby(['Año', 'Mes'])['Unidades_vendidas'].sum().reset_index()
+    
+                    fig, ax = plt.subplots(figsize=(10, 6))
+                    ax.plot(range(len(ventas)), ventas['Unidades_vendidas'], label=f'{producto} - Ventas')
+                    
+                    x = np.arange(len(ventas))
+                    y = ventas['Unidades_vendidas']
+                    z = np.polyfit(x, y, 1)
+                    p = np.poly1d(z)
 
-                    ventas_mensuales = self.datos.groupby('fecha')['Unidades_vendidas'].sum().reset_index()
-                    X = np.arange(len(ventas_mensuales)).reshape(-1, 1)
-                    y = ventas_mensuales['Unidades_vendidas'].values.reshape(-1, 1)
-
-                    modelo = LinearRegression()
-                    modelo.fit(X, y)
-                    tendencia = modelo.predict(X)
-
-                    sns.lineplot(
-                        data=ventas_mensuales,
-                        x='fecha', y='Unidades_vendidas',
-                        label=f"{self.nombre} - Ventas", ax=ax
-                    )
-                    ax.plot(ventas_mensuales['fecha'], tendencia, color="red", linestyle="--", label="Tendencia")
-
-                    ax.set_title(f"Evolución de Ventas Mensual - {self.nombre}", fontsize=10)
-                    ax.set_xlabel("Fecha", fontsize=8)
-                    ax.set_ylabel("Unidades Vendidas", fontsize=8)
-                    ax.tick_params(labelsize=7)
-                    ax.legend(fontsize=7)
+                    ax.plot(x, p(x), linestyle='--', color='red', label='Tendencia')
+                    
+                    ax.set_title('Evolución de Ventas Mensual - '+producto)
+                    ax.set_xlabel('Año-Mes')
+                    ax.set_xticks(range(len(ventas)))
+                    
+                    etiquetas = []
+                    for i, row in enumerate(ventas.itertuples()):
+                        if row.Mes == 1:
+                            etiquetas.append(f"{row.Año}")
+                        else:
+                            etiquetas.append("")
+                    ax.set_xticklabels(etiquetas)
+                    ax.set_ylabel('Unidades Vendidas')
+                    ax.set_ylim(0, None)
+                    ax.legend()
                     ax.grid(True)
-                    ax.set_ylim(0, max(ventas_mensuales['Unidades_vendidas'].values) * 1.1)
 
                     st.pyplot(fig)
 
     l = ['Todos', 'Sucursal Norte', 'Sucursal Centro', 'Sucursal Sur']
-    with st.sidebar:
-        st.header("Cargar archivo de datos")
-        datos = st.file_uploader("Subir archivo CSV", type=["csv"])
 
-        if datos is not None:
-            df = pd.read_csv(datos)
-        else:
-            st.write("No se seleccionó un archivo")
-            st.stop()
+    st.sidebar.header("Cargar archivo de datos")
+    datos = st.sidebar.file_uploader("Subir archivo CSV", type=["csv"])
 
-        suc = st.selectbox('🏢 Seleccionar Sucursal', l)
+    if datos is not None:
+        df = pd.read_csv(datos)
+    else:
+        mostrar_informacion_alumno()
+        st.write("No se seleccionó un archivo")
+        st.stop()
 
-        if suc == 'Todos':
-            df_filtrado = df
-        else:
-            df_filtrado = df[df['Sucursal'] == suc]
+    suc = st.sidebar.selectbox('🏢 Seleccionar Sucursal', l)
+
+    if suc == 'Todos':
+        df_filtrado = df
+    else:
+        df_filtrado = df[df['Sucursal'] == suc]
 
     if suc == 'Todos':
         st.title("Datos de Todas las Sucursales")
