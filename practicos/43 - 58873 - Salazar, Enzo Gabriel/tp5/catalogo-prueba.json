@@ -1,1 +1,0 @@
-[{"codigo": "0001", "nombre": "Coca Cola", "precio": 1500, "tipo": "gaseosa", "stock": 10}, {"codigo": "0002", "nombre": "Pepsi Cola", "precio": 1200, "tipo": "gaseosa", "stock": 20}, {"codigo": "0003", "nombre": "Sonrisa", "precio": 1200, "tipo": "galleta", "stock": 30}, {"codigo": "0004", "nombre": "Oreo", "precio": 2300, "tipo": "galleta", "stock": 40}]

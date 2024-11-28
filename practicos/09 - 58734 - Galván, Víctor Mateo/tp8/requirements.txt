@@ -1,3 +1,0 @@
-streamlit
-matplotlib
-scikit-learn
