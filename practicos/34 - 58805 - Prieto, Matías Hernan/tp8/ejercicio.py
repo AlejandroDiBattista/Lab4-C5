@@ -51,19 +51,24 @@ for producto in data["Producto"].unique():
         df_producto["Año"].astype(str) + "-" + df_producto["Mes"].astype(str).str.zfill(2)
     )
     df_producto = df_producto.sort_values(by="Fecha")
+    
 
-    ingreso_total = df_producto["Ingreso_total"].sum()
     unidades_total = df_producto["Unidades_vendidas"].sum()
-    costo_total = df_producto["Costo_total"].sum()
+  
+    df_producto['Precio_promedio'] = df_producto["Ingreso_total"] / df_producto["Unidades_vendidas"]
+    precio_promedio = df_producto["Precio_promedio"].mean()
+    df_producto["Margen_promedio"] = (df_producto["Ingreso_total"] - df_producto["Costo_total"]) / df_producto["Ingreso_total"]
+    margen_promedio = df_producto["Margen_promedio"].mean()
 
-    if ingreso_total > 0 and unidades_total > 0:
-        precio_promedio = ingreso_total / unidades_total
-        margen_promedio = (ingreso_total - costo_total) / ingreso_total
-    else:
-        precio_promedio, margen_promedio = 0, 0
+    df_producto["Precio_Promedio"] = np.where(
+    df_producto["Unidades_vendidas"] > 0,
+    df_producto["Ingreso_total"] / df_producto["Unidades_vendidas"],
+    0)
 
-    df_producto["Precio_Promedio"] = df_producto["Ingreso_total"] / df_producto["Unidades_vendidas"]
-    df_producto["Margen_Promedio"] = (df_producto["Ingreso_total"] - df_producto["Costo_total"]) / df_producto["Ingreso_total"]
+    df_producto["Margen_Promedio"] = np.where(
+    df_producto["Ingreso_total"] > 0,
+    (df_producto["Ingreso_total"] - df_producto["Costo_total"]) / df_producto["Ingreso_total"],
+    0)
 
     df_producto["Cambio_Precio"] = df_producto["Precio_Promedio"].pct_change() * 100  
     df_producto["Cambio_Margen"] = df_producto["Margen_Promedio"].pct_change() * 100
@@ -73,9 +78,9 @@ for producto in data["Producto"].unique():
         col1, col2 = st.columns([1, 3])  
         with col1:
             st.subheader(producto)
-            st.metric("Precio Promedio", f"${precio_promedio:,.2f}", f"{df_producto['Cambio_Precio'].iloc[-1]:.2f}%")
-            st.metric("Margen Promedio", f"{margen_promedio * 100:.2f}%", f"{df_producto['Cambio_Margen'].iloc[-1]:.2f}%")
-            st.metric("Unidades Vendidas", f"{unidades_total:,}", f"{df_producto['Cambio_Unidades'].iloc[-1]:.2f}%")
+            st.metric("Precio Promedio", f"${precio_promedio:,.0f}".replace(',', '.'), f"{df_producto['Cambio_Precio'].iloc[-1]:.2f}%")
+            st.metric("Margen Promedio", f"{margen_promedio * 100:.0f}%".replace(',', '.'), f"{df_producto['Cambio_Margen'].iloc[-1]:.2f}%")
+            st.metric("Unidades Vendidas", f"{unidades_total:,}".replace(',', '.'), f"{df_producto['Cambio_Unidades'].iloc[-1]:.2f}%")
         with col2:
             fig, ax = plt.subplots(figsize=(18, 10)) 
             ax.plot(
