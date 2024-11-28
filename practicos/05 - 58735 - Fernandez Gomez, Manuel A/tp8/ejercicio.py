@@ -38,26 +38,34 @@ if uploaded_file:
             precio_promedio_actual = df_producto['Precio_unitario'].mean()  # Promedio del precio unitario
             margen_promedio_actual = ((df_producto['Ingreso_total'] - df_producto['Costo_total']) / df_producto['Ingreso_total']).mean()
             unidades_vendidas_actual = df_producto['Unidades_vendidas'].sum()
-    
+
             df_producto['Año'] = df_producto['Fecha'].dt.year
-            df_anterior = df_producto[df_producto['Año'] == df_producto['Año'].max() - 1]
-            if not df_anterior.empty:
-                precio_promedio_anterior = df_anterior['Precio_unitario'].mean()
-                margen_promedio_anterior = ((df_anterior['Ingreso_total'] - df_anterior['Costo_total']) / df_anterior['Ingreso_total']).mean()
-                unidades_vendidas_anterior = df_anterior['Unidades_vendidas'].sum()
+            df_anual = df_producto.groupby('Año').agg(
+                precio_promedio=('Precio_unitario', 'mean'),
+                margen_promedio=('Ingreso_total', lambda x: ((x - df_producto.loc[x.index, 'Costo_total']) / x).mean()),
+                unidades_vendidas=('Unidades_vendidas', 'sum')
+            ).reset_index()
+
+            df_anual['variacion_precio'] = df_anual['precio_promedio'].pct_change() * 100
+            df_anual['variacion_margen'] = df_anual['margen_promedio'].pct_change() * 100
+            df_anual['variacion_unidades'] = df_anual['unidades_vendidas'].pct_change() * 100
+
+            df_actual = df_anual[df_anual['Año'] == df_anual['Año'].max()]
+            df_anterior = df_anual[df_anual['Año'] == df_anual['Año'].max() - 1]
     
-                delta_precio = ((precio_promedio_actual - precio_promedio_anterior) / precio_promedio_anterior) * 100
-                delta_margen = ((margen_promedio_actual - margen_promedio_anterior) / margen_promedio_anterior) * 100
-                delta_unidades = ((unidades_vendidas_actual - unidades_vendidas_anterior) / unidades_vendidas_anterior) * 100
+            if not df_anterior.empty:
+                variacion_precio = df_actual['variacion_precio'].values[0] if not np.isnan(df_actual['variacion_precio'].values[0]) else None
+                variacion_margen = df_actual['variacion_margen'].values[0] if not np.isnan(df_actual['variacion_margen'].values[0]) else None
+                variacion_unidades = df_actual['variacion_unidades'].values[0] if not np.isnan(df_actual['variacion_unidades'].values[0]) else None
             else:
-                delta_precio, delta_margen, delta_unidades = None, None, None
+                variacion_precio, variacion_margen, variacion_unidades = None, None, None
     
             col1, col_sep, col2 = st.columns([1, 0.1, 3])
             with col1:
                 st.subheader(f"Producto: {producto}")
-                st.metric("Precio Promedio", f"${precio_promedio_actual:.2f}", delta=f"{delta_precio:.2f}%" if delta_precio is not None else "N/A")
-                st.metric("Margen Promedio", f"{margen_promedio_actual * 100:.2f}%", delta=f"{delta_margen:.2f}%" if delta_margen is not None else "N/A")
-                st.metric("Unidades Vendidas", f"{int(unidades_vendidas_actual):,}", delta=f"{delta_unidades:.2f}%" if delta_unidades is not None else "N/A")
+                st.metric("Precio Promedio", f"${precio_promedio_actual:,.2f}", delta=f"{variacion_precio:.2f}%" if variacion_precio is not None else "N/A")
+                st.metric("Margen Promedio", f"{margen_promedio_actual * 100:.2f}%", delta=f"{variacion_margen:.2f}%" if variacion_margen is not None else "N/A")
+                st.metric("Unidades Vendidas", f"{int(unidades_vendidas_actual):,}", delta=f"{variacion_unidades:.2f}%" if variacion_unidades is not None else "N/A")
     
             with col2:
                 df_producto = df_producto.sort_values('Fecha')
@@ -79,7 +87,6 @@ if uploaded_file:
                 plt.clf()
     
             st.markdown("---")
-
 
             st.markdown(
                 """
