@@ -53,10 +53,13 @@ if uploaded_file is not None:
         unidades_vendidas = datos_producto["Unidades_vendidas"].sum()
         precio_fijo = precios_fijos.get(producto, 0) 
         ingreso_total = unidades_vendidas * precio_fijo
-        costo_total = datos_producto["Costo_total"].sum()
-        margen_promedio = (ingreso_total - costo_total) / ingreso_total if ingreso_total > 0 else 0
-
         
+        # Margen deseado del 30%
+        margen_deseado = 0.3
+        costo_total_calculado = ingreso_total * (1 - margen_deseado)
+        margen_promedio = margen_deseado
+
+        # Variaciones ficticias
         variacion_precio = np.random.uniform(-0.3, 0.3)  
         variacion_margen = np.random.uniform(-0.1, 0.1)  
         variacion_unidades = np.random.uniform(-0.2, 0.2)  
@@ -86,7 +89,6 @@ if uploaded_file is not None:
                 )
             
             with col2:
-                
                 datos_producto["Fecha"] = pd.to_datetime(
                     datos_producto["Año"].astype(str) + "-" + datos_producto["Mes"].astype(str) + "-01"
                 )
