@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 import matplotlib.dates as mdates
 
-## ATENCION: Debe colocar la direccion en la que ha sido publicada la aplicacion en la siguiente linea\
+## ATENCION: Debe colocar la direccion en la que ha sido publicada la aplicacion en la siguiente linea
 # url = 'https://marianotp8c5.streamlit.app/'
 
 def mostrar_informacion_alumno():
@@ -15,7 +15,6 @@ def mostrar_informacion_alumno():
         st.markdown('**Comisión:** C5')
 
 mostrar_informacion_alumno()
-
 
 # ======== Funciones auxiliares ========
 
@@ -32,25 +31,29 @@ def cargar_datos(uploaded_file):
         st.error(f"Error al leer el archivo: {e}")
         return None
 
-
 def calcular_variaciones(df, producto):
     """Calcula las variaciones de precio, margen y unidades para un producto."""
-    df_producto = df[df["Producto"] == producto]
-    df_producto["Fecha"] = pd.to_datetime(df_producto["Año"].astype(str) + '-' + df_producto["Mes"].astype(str) + '-01', errors="coerce")
-    df_producto.sort_values("Fecha", inplace=True)
-    
-    # Calcular variaciones mes a mes
-    df_producto["Var_precio"] = df_producto["Ingreso_total"].pct_change() * 100
-    df_producto["Var_margen"] = ((df_producto["Ingreso_total"] - df_producto["Costo_total"]).pct_change()) * 100
-    df_producto["Var_unidades"] = df_producto["Unidades_vendidas"].pct_change() * 100
+    datos_producto = df[df['Producto'] == producto]  # Filtrar por producto
+    datos_producto["Fecha"] = pd.to_datetime(
+        datos_producto["Año"].astype(str) + '-' + datos_producto["Mes"].astype(str) + '-01',
+        errors="coerce"
+    )
+    datos_producto.sort_values("Fecha", inplace=True)
 
-    # Retornar las últimas variaciones como resumen
+    # Calcular variaciones
+    precio_promedio_anual = datos_producto.groupby('Año').apply(
+        lambda x: x["Ingreso_total"].sum() / x["Unidades_vendidas"].sum()
+    )
+    margen_promedio_anual = datos_producto.groupby('Año').apply(
+        lambda x: ((x["Ingreso_total"].sum() - x["Costo_total"].sum()) / x["Ingreso_total"].sum()) * 100
+    )
+    unidades_vendidas_anual = datos_producto.groupby('Año')["Unidades_vendidas"].sum()
+
     return {
-        "precio": df_producto["Var_precio"].iloc[-1] if len(df_producto) > 1 else 0,
-        "margen": df_producto["Var_margen"].iloc[-1] if len(df_producto) > 1 else 0,
-        "unidades": df_producto["Var_unidades"].iloc[-1] if len(df_producto) > 1 else 0,
+        "precio": precio_promedio_anual.pct_change().mean() * 100,
+        "margen": margen_promedio_anual.pct_change().mean() * 100,
+        "unidades": unidades_vendidas_anual.pct_change().mean() * 100,
     }
-
 
 def generar_grafico(ventas_mensuales, producto):
     """Genera un gráfico con la evolución de ventas y la tendencia."""
@@ -87,7 +90,6 @@ def generar_grafico(ventas_mensuales, producto):
     ax.legend()
     return fig
 
-
 st.title("Análisis de Ventas por producto")
 
 # Carga del archivo CSV
@@ -108,31 +110,37 @@ if archivo_cargado:
         # Iterar por cada producto
         productos = datos["Producto"].unique()
         for producto in productos:
-            prod_datos = datos[datos["Producto"] == producto]
+            with st.container(border=True):
+                prod_datos = datos[datos["Producto"] == producto]
 
-            # Cálculos principales
-            prod_datos["Fecha"] = pd.to_datetime(prod_datos["Año"].astype(str) + '-' + prod_datos["Mes"].astype(str) + '-01', errors="coerce")
-            ventas_mensuales = prod_datos.groupby("Fecha").sum(numeric_only=True).reset_index()
-            precio_promedio = round(prod_datos["Ingreso_total"].sum() / prod_datos["Unidades_vendidas"].sum(), 2)
-            margen_promedio = round((prod_datos["Ingreso_total"].sum() - prod_datos["Costo_total"].sum()) / prod_datos["Ingreso_total"].sum() * 100, 2)
-            unidades_totales = prod_datos["Unidades_vendidas"].sum()
+                # Cálculos principales
+                prod_datos["Fecha"] = pd.to_datetime(prod_datos["Año"].astype(str) + '-' + prod_datos["Mes"].astype(str) + '-01', errors="coerce")
+                ventas_mensuales = prod_datos.groupby("Fecha").sum(numeric_only=True).reset_index()
+                precio_anual = (
+                    prod_datos.groupby("Año").apply(
+                    lambda x: x["Ingreso_total"].sum() / x["Unidades_vendidas"].sum()
+                    )
+                )
+                precio_promedio = round(precio_anual.mean(), 2)
 
-            # Calcular variaciones reales
-            variaciones = calcular_variaciones(prod_datos, producto)
+                margen_promedio = round((prod_datos["Ingreso_total"].sum() - prod_datos["Costo_total"].sum()) / prod_datos["Ingreso_total"].sum() * 100, 2)
+                unidades_totales = prod_datos["Unidades_vendidas"].sum()
 
-            # Mostrar métricas
-            st.divider()  # Separar productos con una línea
-            col1, col2 = st.columns([1, 2])
-            with col1:
+                # Calcular variaciones reales
+                variaciones = calcular_variaciones(prod_datos, producto)
+
+                # Mostrar métricas y gráfico dentro de un único contenedor
                 st.subheader(producto)
-                st.metric("Precio Promedio", f"${precio_promedio}", f"{variaciones['precio']:.2f}%")
-                st.metric("Margen Promedio", f"{margen_promedio}%", f"{variaciones['margen']:.2f}%", delta_color="normal")
-                st.metric("Unidades Vendidas", f"{unidades_totales:,.0f}", f"{variaciones['unidades']:.2f}%")
-            with col2:
-                if not ventas_mensuales.empty:
-                    fig = generar_grafico(ventas_mensuales, producto)
-                    st.pyplot(fig)
-                else:
-                    st.warning(f"No hay suficientes datos para generar un gráfico de ventas para {producto}.")
+                col1, col2 = st.columns([0.25, 0.75])
+                with col1:
+                    st.metric("Precio Promedio", f"${precio_promedio}", f"{variaciones['precio']:.2f}%")
+                    st.metric("Margen Promedio", f"{margen_promedio}%", f"{variaciones['margen']:.2f}%", delta_color="normal")
+                    st.metric("Unidades Vendidas", f"{unidades_totales:,.0f}", f"{variaciones['unidades']:.2f}%")
+                with col2:
+                    if not ventas_mensuales.empty:
+                        fig = generar_grafico(ventas_mensuales, producto)
+                        st.pyplot(fig)
+                    else:
+                        st.warning(f"No hay suficientes datos para generar un gráfico de ventas para {producto}.")
 else:
     st.info("Por favor, sube un archivo CSV para comenzar.")

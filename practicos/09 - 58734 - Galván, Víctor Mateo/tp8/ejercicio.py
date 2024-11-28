@@ -6,22 +6,17 @@ from sklearn.linear_model import LinearRegression
 
 st.set_page_config(layout="wide")
 
-## ATENCION: Debe colocar la direccion en la que ha sido publicada la aplicacion en la siguiente linea\
-# url = https://tp8-58734.streamlit.app
-
+## Función para mostrar información del alumno
 def mostrar_informacion_alumno():
-    with st.container(border=True):
+    with st.container():
         st.markdown('**Legajo:** 58734')
-        st.markdown('**Nombre:** victor mateo galvan')
+        st.markdown('**Nombre:** Victor Mateo Galván')
         st.markdown('**Comisión:** C5')
 
-mostrar_informacion_alumno()
-
-
 # Título de la aplicación
-st.title("Datos de Ventas de Todas las Sucursales")
+st.title("Datos de Todas las Sucursales")
 
-# Cargar archivo CSV
+# Cargar archivo CSV desde el panel lateral
 uploaded_file = st.sidebar.file_uploader("Subir archivo CSV", type=["csv"])
 
 if uploaded_file is not None:
@@ -32,7 +27,7 @@ if uploaded_file is not None:
     data['Año'] = data['Año'].astype(int)
     data['Mes'] = data['Mes'].astype(int)
 
-    # Seleccionar sucursal
+    # Seleccionar sucursal desde el panel lateral
     sucursal = st.sidebar.selectbox(
         "Seleccionar Sucursal",
         options=["Todas"] + list(data["Sucursal"].unique())
@@ -45,51 +40,94 @@ if uploaded_file is not None:
     # Agrupar por Producto
     productos = data["Producto"].unique()
 
+    # Mostrar gráficos e información por producto
     for producto in productos:
-        # Filtrar datos por producto
-        df_producto = data[data["Producto"] == producto]
+        with st.container():
+            st.subheader(producto)
 
-        # Calcular Precio promedio, Margen promedio y Unidades vendidas
-        precio_promedio = (df_producto["Ingreso_total"].sum() / 
-                           df_producto["Unidades_vendidas"].sum())
-        margen_promedio = ((df_producto["Ingreso_total"].sum() - 
-                            df_producto["Costo_total"].sum()) / 
-                           df_producto["Ingreso_total"].sum()) * 100
-        unidades_vendidas = df_producto["Unidades_vendidas"].sum()
+            # Filtrar datos por producto
+            datos_producto = data[data["Producto"] == producto]
 
-        # Mostrar estadísticas
-        st.subheader(producto)
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Precio Promedio", f"${precio_promedio:.3f}")
-        col2.metric("Margen Promedio", f"{margen_promedio:.2f}%")
-        col3.metric("Unidades Vendidas", f"{unidades_vendidas:,}")
+            # Convertir a numérico y eliminar valores inválidos
+            datos_producto["Ingreso_total"] = pd.to_numeric(datos_producto["Ingreso_total"], errors="coerce")
+            datos_producto["Unidades_vendidas"] = pd.to_numeric(datos_producto["Unidades_vendidas"], errors="coerce")
+            datos_producto["Costo_total"] = pd.to_numeric(datos_producto["Costo_total"], errors="coerce")
 
-        # Crear columna de fecha usando el primer día del mes
-        df_producto["Fecha"] = pd.to_datetime(df_producto["Año"].astype(str) + '-' + 
-                                              df_producto["Mes"].astype(str) + '-01')
+            # Eliminar filas con valores nulos en las columnas críticas
+            datos_producto = datos_producto.dropna(subset=["Ingreso_total", "Unidades_vendidas", "Costo_total"])
 
-        # Ordenar por fecha para el gráfico
-        df_producto = df_producto.sort_values("Fecha")
+            # Calcular Precio promedio basado en precios unitarios
+            datos_producto["Precio_unitario"] = datos_producto["Ingreso_total"] / datos_producto["Unidades_vendidas"]
+            precio_promedio = round(datos_producto["Precio_unitario"].mean(), 2)  # Redondear el precio promedio a 2 decimales
 
-        # Gráfico de evolución de ventas
-        fig, ax = plt.subplots()
-        ax.plot(df_producto["Fecha"], df_producto["Unidades_vendidas"], label=producto, color="blue")
+            # Calcular las ganancias promedio y el margen
+            datos_producto['Ganancia'] = datos_producto['Ingreso_total'] - datos_producto['Costo_total']
+            datos_producto['Margen'] = (datos_producto['Ganancia'] / datos_producto['Ingreso_total']) * 100
+            margen_promedio = round(datos_producto['Margen'].mean(), 2)  # Redondear el margen promedio a 2 decimales
 
-        # Agregar línea de tendencia
-        X = np.array(range(len(df_producto))).reshape(-1, 1)
-        y = df_producto["Unidades_vendidas"].values
-        modelo = LinearRegression()
-        modelo.fit(X, y)
-        tendencia = modelo.predict(X)
-        ax.plot(df_producto["Fecha"], tendencia, label="Tendencia", color="red", linestyle="--")
+            # Calcular Unidades vendidas totales
+            unidades_vendidas = datos_producto["Unidades_vendidas"].sum()
 
-        # Configuración del gráfico
-        ax.set_title("Evolución de Ventas Mensual")
-        ax.set_xlabel("Fecha")
-        ax.set_ylabel("Unidades Vendidas")
-        ax.legend()
+            # Calcular variación porcentual del precio, margen y unidades vendidas
+            datos_producto['Fecha'] = pd.to_datetime(datos_producto["Año"].astype(str) + '-' + 
+                                                     datos_producto["Mes"].astype(str) + '-01')
+            datos_producto = datos_producto.sort_values("Fecha")
 
-        # Mostrar gráfico en Streamlit
-        st.pyplot(fig)
+            precio_anterior = datos_producto["Precio_unitario"].shift(1).mean()
+            margen_anterior = datos_producto["Margen"].shift(1).mean()
+            unidades_anterior = datos_producto["Unidades_vendidas"].shift(1).sum()
+
+            variacion_precio = ((precio_promedio - precio_anterior) / precio_anterior) * 100 if precio_anterior else 0
+            variacion_margen = ((margen_promedio - margen_anterior) / margen_anterior) * 100 if margen_anterior else 0
+            variacion_unidades = ((unidades_vendidas - unidades_anterior) / unidades_anterior) * 100 if unidades_anterior else 0
+
+            # Crear diseño con columnas
+            col1, col2 = st.columns([1, 3])  # 25% para métricas, 75% para gráfico
+
+            # Métricas a la izquierda
+            with col1:
+                st.metric(
+                    "Precio Promedio",
+                    f"${precio_promedio:,.2f}",  # El precio ya está redondeado a 2 decimales
+                    f"{variacion_precio:,.2f}%",
+                    delta_color="inverse" if variacion_precio < 0 else "normal"
+                )
+                st.metric(
+                    "Margen Promedio",
+                    f"{margen_promedio:,.2f}%",  # El margen ya está redondeado a 2 decimales
+                    f"{variacion_margen:,.2f}%",
+                    delta_color="inverse" if variacion_margen < 0 else "normal"
+                )
+                st.metric(
+                    "Unidades Vendidas",
+                    f"{unidades_vendidas:,}",
+                    f"{variacion_unidades:,.2f}%",
+                    delta_color="inverse" if variacion_unidades < 0 else "normal"
+                )
+
+            # Gráfico a la derecha
+            with col2:
+                fig, ax = plt.subplots()
+                ax.plot(datos_producto["Fecha"], datos_producto["Unidades_vendidas"], label=producto, color="blue")
+
+                # Agregar línea de tendencia
+                X = np.array(range(len(datos_producto))).reshape(-1, 1)
+                y = datos_producto["Unidades_vendidas"].values
+                modelo = LinearRegression()
+                modelo.fit(X, y)
+                tendencia = modelo.predict(X)
+                ax.plot(datos_producto["Fecha"], tendencia, label="Tendencia", color="red", linestyle="--")
+
+                # Configuración del gráfico
+                ax.set_title("Evolución de Ventas Mensual")
+                ax.set_xlabel("Año-Mes")
+                ax.set_ylabel("Unidades Vendidas")
+                ax.legend()
+
+                # Mostrar gráfico en Streamlit
+                st.pyplot(fig)
+
 else:
+    # Mostrar información del alumno si no se han cargado datos
+    mostrar_informacion_alumno()
     st.write("Por favor, sube un archivo CSV para comenzar.")

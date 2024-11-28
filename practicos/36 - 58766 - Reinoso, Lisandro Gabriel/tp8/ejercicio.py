@@ -42,42 +42,42 @@ if archivo:
 
             dato_producto_agrupado["Unidades_vendidas_suavizadas"] = dato_producto_agrupado["Unidades_vendidas"].rolling(window=6, min_periods=1).mean()
 
-            precio_promedio = dato_producto_agrupado["Ingreso_total"].sum() / dato_producto_agrupado["Unidades_vendidas"].sum()
-            margen_promedio = ((dato_producto_agrupado["Ingreso_total"].sum() - dato_producto_agrupado["Costo_total"].sum()) / dato_producto_agrupado["Ingreso_total"].sum()) * 100
+            dato_producto_agrupado["precio_por_producto"] = dato_producto_agrupado["Ingreso_total"] / dato_producto_agrupado["Unidades_vendidas"]
+            precio_promedio = dato_producto_agrupado["precio_por_producto"].mean()
+
+            dato_producto_agrupado["Margen"] = ((dato_producto_agrupado["Ingreso_total"] - dato_producto_agrupado["Costo_total"]) / dato_producto_agrupado["Ingreso_total"]) * 100
+            margen_promedio = dato_producto_agrupado["Margen"].mean()
             total_unidades_vendidas = dato_producto_agrupado["Unidades_vendidas"].sum()
 
-            dato_producto_agrupado = dato_producto_agrupado.sort_values("Año_x_Mes")
+            precio_promedio_anual = dato_producto_agrupado.groupby("Año")["precio_por_producto"].mean()
+            variacion_precio = precio_promedio_anual.pct_change().mean() * 100
 
-            precio_anterior = dato_producto_agrupado["Ingreso_total"].iloc[-2] / dato_producto_agrupado["Unidades_vendidas"].iloc[-2]
-            margen_anterior = ((dato_producto_agrupado["Ingreso_total"].iloc[-2] - dato_producto_agrupado["Costo_total"].iloc[-2]) / dato_producto_agrupado["Ingreso_total"].iloc[-2]) * 100
-            unidades_actuales = dato_producto_agrupado["Unidades_vendidas"].iloc[-1]
-            unidades_anteriores = dato_producto_agrupado["Unidades_vendidas"].iloc[-2]
+            margen_promedio_anual = dato_producto_agrupado.groupby("Año")["Margen"].mean()
+            variacion_margen = margen_promedio_anual.pct_change().mean() * 100
 
-            variacion_precio = ((precio_promedio - precio_anterior) / precio_anterior) * 100
-            variacion_margen = ((margen_promedio - margen_anterior) / margen_anterior) * 100
-            variacion_unidades = ((unidades_actuales - unidades_anteriores) / unidades_anteriores) * 100
+            unidades_vendidas_anuales = dato_producto_agrupado.groupby("Año")["Unidades_vendidas"].sum()
+            variacion_unidades = unidades_vendidas_anuales.pct_change().mean() * 100
 
             col1, col2 = st.columns([1, 2])
 
             with col1:
                 st.subheader(f"{producto}")
-                st.metric("Precio Promedio", f"${precio_promedio:,.2f}", f"{variacion_precio:.2f}%")
-                st.metric("Margen Promedio", f"{margen_promedio:.2f}%", f"{variacion_margen:.2f}%")
-                st.metric("Unidades Vendidas", f"{total_unidades_vendidas:,}", f"{variacion_unidades:.2f}%")
+                st.metric("Precio Promedio", f"${precio_promedio:,.0f}", f"{variacion_precio:.2f}%")
+                st.metric("Margen Promedio", f"{margen_promedio.round():.2f}%", f"{variacion_margen:.2f}%")
+                st.metric("Unidades Vendidas", f"{total_unidades_vendidas:,.0f}", f"{variacion_unidades:.2f}%")
 
             with col2:
                 fig, ax = plt.subplots(figsize=(14, 8))  
-                ax.plot(dato_producto_agrupado["Año_x_Mes"],dato_producto_agrupado["Unidades_vendidas_suavizadas"],label=f"{producto}",color="blue",linewidth=2)
+                ax.plot(dato_producto_agrupado["Año_x_Mes"], dato_producto_agrupado["Unidades_vendidas_suavizadas"], label=f"{producto}", color="blue", linewidth=2)
 
                 x_numeric = np.arange(len(dato_producto_agrupado))
                 tendencia = np.polyfit(x_numeric, dato_producto_agrupado["Unidades_vendidas_suavizadas"], 1)
                 trend = np.poly1d(tendencia)
-                ax.plot(dato_producto_agrupado["Año_x_Mes"],trend(x_numeric),label="Tendencia",color="red",linestyle="--",linewidth=2)
+                ax.plot(dato_producto_agrupado["Año_x_Mes"], trend(x_numeric), label="Tendencia", color="red", linestyle="--", linewidth=2)
                 
                 ax.set_ylim(0, None) 
-                ax.set_xticks(pd.date_range(start=dato_producto_agrupado["Año_x_Mes"].min(),end=dato_producto_agrupado["Año_x_Mes"].max(),freq="12MS"))
-                ax.set_xticklabels(pd.date_range(start=dato_producto_agrupado["Año_x_Mes"].min(),end=dato_producto_agrupado["Año_x_Mes"].max(),freq="12MS"
-                ).strftime("%Y-%m"), rotation=45, ha="right", fontsize=12)
+                ax.set_xticks(pd.date_range(start=dato_producto_agrupado["Año_x_Mes"].min(), end=dato_producto_agrupado["Año_x_Mes"].max(),freq="12MS"))
+                ax.set_xticklabels(pd.date_range(start=dato_producto_agrupado["Año_x_Mes"].min(),end=dato_producto_agrupado["Año_x_Mes"].max(),freq="12MS").strftime("%Y-%m"), rotation=45, ha="right", fontsize=12)
                 ax.tick_params(axis='both', labelsize=14)
                 ax.set_xlabel("Año - Mes", fontsize=18)
                 ax.set_ylabel("Unidades Vendidas", fontsize=18)

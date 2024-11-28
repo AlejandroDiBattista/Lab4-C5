@@ -12,69 +12,90 @@ def mostrar_informacion_alumno():
         st.markdown('**Nombre:** Ramiro Rahman Rintoul')
         st.markdown('**Comisión:** C5')
 
-mostrar_informacion_alumno()
 
 
 st.sidebar.header("Seleccione un archivo CSV")
 uploaded_file = st.sidebar.file_uploader("Seleccione un archivo CSV", type=["csv"])
 
+if uploaded_file is None:
+    mostrar_informacion_alumno()
 
-    
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
 
-    st.sidebar.subheader("Seleccionar Sucursales")
-    sucursales = st.sidebar.selectbox("Seleccione una Sucursal", df['Sucursal'].unique())
-    df_sucursal = df[df['Sucursal'] == sucursales]
+    columnas_requeridas = ["Sucursal", "Producto", "Año", "Mes", "Unidades_vendidas", "Ingreso_total", "Costo_total"]
+    if not set(columnas_requeridas).issubset(df.columns):
+        st.error(f"El archivo debe contener las columnas: {', '.join(columnas_requeridas)}")
+        st.stop()
 
-    st.title(f"Datos de la {sucursales}")
-    st.write(df_sucursal)
+    df["Año-Mes"] = df["Año"].astype(str) + "-" + df["Mes"].astype(str).str.zfill(2)
 
-    resultados = df.groupby("Producto").agg(
-            Precio_Promedio=("Ingreso_total", lambda x: np.sum(x) / np.sum(df.loc[x.index, "Unidades_vendidas"])),
-            Margen_Promedio=("Ingreso_total", lambda x: np.mean((x - df.loc[x.index, "Costo_total"]) / x) * 100),
-            Unidades_Vendidas=("Unidades_vendidas", "sum"),
-    ).reset_index()
+    sucursales = st.sidebar.selectbox("Seleccione una Sucursal", ["Todas las sucursales"] + sorted(df["Sucursal"].unique()))
+    if sucursales != "Todas las sucursales":
+        df = df[df["Sucursal"] == sucursales]
 
-    st.write("Resultados por Producto:")
-    st.dataframe(resultados)
-    
-    productos = resultados["Producto"].unique()
-    for producto in productos:
-        
+    st.title(f"Datos de Ventas - {sucursales}")
+
+    for producto in df["Producto"].unique():
         producto_data = df[df["Producto"] == producto]
 
-        # Ordenar por Año y Mes
         producto_data = producto_data.sort_values(by=["Año", "Mes"])
-
-        eje_temporal = producto_data["Año"].astype(str) + "-" + producto_data["Mes"].astype(str).str.zfill(2)
-
-        # gráfico
-        fig, ax = plt.subplots()
-        ax.plot(
-            eje_temporal,
-            producto_data["Unidades_vendidas"],
-            label="Unidades Vendidas",
-            color="blue",
-        )
-        ax.set_xticks(eje_temporal[::max(len(eje_temporal) // 10, 1)])  # Reducir etiquetas si hay muchas
-        ax.set_xticklabels(eje_temporal[::max(len(eje_temporal) // 10, 1)], rotation=45)
-        ax.set_xlabel("Período (Año-Mes)")
-        ax.set_ylabel("Unidades Vendidas")
-
-        # Línea de tendencia
-        tendencia = np.polyfit(np.arange(len(producto_data)), producto_data["Unidades_vendidas"], 1)
-        ax.plot(
-            eje_temporal,
-            np.polyval(tendencia, np.arange(len(producto_data))),
-            label="Tendencia",
-            color="red",
-        )
-        ax.grid(True, linestyle=":", alpha=0.7)
-
-        fig.text(0.02, 0.95, producto, fontsize=18, fontweight="bold", va="top", ha="left")
+        producto_data["Precio Promedio"] = producto_data["Ingreso_total"] / producto_data["Unidades_vendidas"]
+        producto_data["Margen Promedio"] = (producto_data["Ingreso_total"] - producto_data["Costo_total"]) / producto_data["Ingreso_total"]
         
-        ax.legend()
-        st.pyplot(fig)
+        precio_promedio = producto_data["Precio Promedio"].mean()
+        margen_promedio = producto_data["Margen Promedio"].mean()
+        unidades_vendidas = producto_data["Unidades_vendidas"].sum()
 
+        producto_data["Cambio Precio (%)"] = producto_data["Precio Promedio"].pct_change() * 100
+        producto_data["Cambio Margen (%)"] = producto_data["Margen Promedio"].pct_change() * 100
+        producto_data["Cambio Unidades (%)"] = producto_data["Unidades_vendidas"].pct_change() * 100
+        
+        cambio_precio = producto_data["Cambio Precio (%)"].iloc[-1]
+        cambio_margen = producto_data["Cambio Margen (%)"].iloc[-1]
+        cambio_unidades = producto_data["Cambio Unidades (%)"].iloc[-1]
+
+        with st.container(border=True):
+            st.subheader(producto)
+
+            col1, col2 = st.columns([1, 3])
+            with col1:
+                col1.metric(
+                    "Precio Promedio", 
+                    f"${precio_promedio:,.2f}", 
+                    f"{producto_data['Cambio Precio (%)'].iloc[-1]:.2f}%"
+                )
+                col1.metric(
+                    "Margen Promedio", 
+                    f"{margen_promedio * 100:.2f}%", 
+                    f"{producto_data['Cambio Margen (%)'].iloc[-1]:.2f}%"
+                )
+                col1.metric(
+                    "Unidades Vendidas", 
+                    f"{unidades_vendidas:,}", 
+                    f"{producto_data['Cambio Unidades (%)'].iloc[-1]:.2f}%"
+                )
+
+            with col2:      
+                eje_temporal = producto_data["Año-Mes"]
+                fig, ax = plt.subplots(figsize=(10, 6))
+                ax.plot(eje_temporal, producto_data["Unidades_vendidas"], label="Unidades Vendidas", color="blue")
+        
+                z = np.polyfit(range(len(producto_data)), producto_data["Unidades_vendidas"], 1)
+                tendencia = np.poly1d(z)(range(len(producto_data)))
+                ax.plot(eje_temporal, tendencia, label="Tendencia", linestyle="--", color="red")
+        
+                ax.set_title(f"Evolución de Ventas - {producto}")
+                ax.set_xlabel("Año-Mes")
+                ax.set_ylabel("Unidades Vendidas")
+                ax.set_xticks(eje_temporal[::max(len(eje_temporal) // 10, 1)])
+                ax.set_xticklabels(eje_temporal[::max(len(eje_temporal) // 10, 1)], rotation=45, ha="right")
+                ax.legend()
+                ax.grid(True)
+        
+                st.pyplot(fig)
+
+
+
+    
