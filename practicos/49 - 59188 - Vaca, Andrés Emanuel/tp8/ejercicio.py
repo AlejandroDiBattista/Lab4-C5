@@ -52,49 +52,36 @@ def mostrar_graficos(datos, sucursal):
         datos_producto = datos[datos['Producto'] == producto]
         col1, col2 = st.columns([1, 2])
 
-       
+        with st.container(border=True):
+            col1, col2 = st.columns([1, 3])
+
+
         with col1:
-            st.subheader(f"Producto: {producto}")
+             st.subheader(f"Producto: {producto}")
 
-           
-            total_unidades = datos_producto['Unidades_vendidas'].sum()
-            ingreso_total = datos_producto['Ingreso_total'].sum()
-            costo_total = datos_producto['Costo_total'].sum()
-            margen_promedio = (ingreso_total - costo_total) / ingreso_total if ingreso_total != 0 else 0
-            precio_promedio = ingreso_total / total_unidades if total_unidades != 0 else 0
+             datos_producto['Precio_unitario'] = datos_producto['Ingreso_total'] / datos_producto['Unidades_vendidas']
+             promedio_precio = datos_producto['Precio_unitario'].mean()
 
-           
-            datos_producto = datos_producto.sort_values(by='Fecha')
-            unidades_cambio = (
-                (datos_producto['Unidades_vendidas'].iloc[-1] - datos_producto['Unidades_vendidas'].iloc[-2])
-                / datos_producto['Unidades_vendidas'].iloc[-2] * 100
-                if len(datos_producto) > 1 else 0
-            )
-            precio_cambio = (
-                (datos_producto['Ingreso_total'].iloc[-1] - datos_producto['Ingreso_total'].iloc[-2])
-                / datos_producto['Ingreso_total'].iloc[-2] * 100
-                if len(datos_producto) > 1 else 0
-            )
+             promedio_precio_por_año = datos_producto.groupby('Año')['Precio_unitario'].mean()
+             cambio_promedio_precio_anual = promedio_precio_por_año.pct_change().mean() * 100
 
+             datos_producto['Beneficio'] = datos_producto['Ingreso_total'] - datos_producto['Costo_total']
+             datos_producto['Porcentaje_ganancia'] = (datos_producto['Beneficio'] / datos_producto['Ingreso_total']) * 100
+             promedio_margen = datos_producto['Porcentaje_ganancia'].mean()
+
+             promedio_margen_por_año = datos_producto.groupby('Año')['Porcentaje_ganancia'].mean()
+             cambio_margen_promedio_anual = promedio_margen_por_año.pct_change().mean() * 100
+
+             total_vendido = datos_producto['Unidades_vendidas'].sum()
+             unidades_por_año = datos_producto.groupby('Año')['Unidades_vendidas'].sum()
+             variacion_anual_unidades_vendidas = unidades_por_año.pct_change().mean() * 100
+ 
            
-            st.metric(
-                "Precio Promedio", 
-                f"${precio_promedio:.2f}", 
-                f"{precio_cambio:.2f}%", 
-                delta_color="inverse"  
-            )
-            st.metric(
-                "Margen Promedio", 
-                f"{margen_promedio * 100:.2f}%", 
-                f"{precio_cambio:.2f}%", 
-                delta_color="normal"
-            )
-            st.metric(
-                "Unidades Vendidas", 
-                f"{total_unidades:,}", 
-                f"{unidades_cambio:.2f}%", 
-                delta_color="normal"
-            )
+             st.metric( label="Precio Medio", value=f"${promedio_precio:,.0f}".replace(",", "."),  delta=f"{cambio_promedio_precio_anual:.2f}%")
+             
+             st.metric( label="Margen Medio",  value=f"{promedio_margen:.0f}%".replace(",", "."), delta=f"{cambio_margen_promedio_anual:.2f}%" )
+             
+             st.metric(label="Unidades Totales", value=f"{total_vendido:,}".replace(",", "."), delta=f"{variacion_anual_unidades_vendidas:.2f}%")
 
       
         with col2:
