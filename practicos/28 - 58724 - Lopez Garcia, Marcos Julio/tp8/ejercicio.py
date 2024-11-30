@@ -72,8 +72,8 @@ class Producto:
             col1, col2 = st.columns([1, 2])
 
             with col1:
-                st.metric("Precio Promedio", f"${precio_promedio:,.2f}", delta=f"{delta_precio:.2f}%")
-                st.metric("Margen Promedio", f"{margen_promedio:.2f}%", delta=f"{delta_margen:.2f}%")
+                st.metric("Precio Promedio", f"${precio_promedio:,.0f}", delta=f"{delta_precio:.2f}%")
+                st.metric("Margen Promedio", f"{margen_promedio:.0f}%", delta=f"{delta_margen:.2f}%")
                 st.metric("Unidades Vendidas", f"{unidades_totales:,.0f}", delta=f"{delta_unidades:.2f}%")
 
             with col2:
