@@ -39,6 +39,7 @@ def entrenamiento(modelo, datos, epocas, lr):
         optimizador.step()
         historial_perdidas.append(perdida.item())
         barra_progreso.progress((epoca + 1) / epocas)
+        label_error.text(f"Época {epoca + 1}/{epocas} - Pérdida: {perdida.item():.6f}")
 
     return historial_perdidas
 
@@ -75,6 +76,7 @@ if st.sidebar.button("Iniciar Entrenamiento"):
 
     red = ModeloVentas(entrada=1, ocultas=neuronas_ocultas, salida=1)
     barra_progreso = st.sidebar.progress(0)
+    label_error = st.sidebar.empty()
     historial = entrenamiento(red, datos_tensor, epocas, tasa_aprendizaje)
 
     st.sidebar.success("Entrenamiento completado")
