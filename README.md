@@ -18,6 +18,7 @@ Por último, las personas que están _libres_ son aquellas que han dejado de cur
  14. 58894  González Nacusse, Flavia
  15. 59488  González, Mariano Emanuel
  16. 58720  Gonzalez, Martín Natanael
+ 20. 58761  Juarez, Lautaro Andres En
  21. 58758  Juarez, Milagro Macarena
  22. 58721  Juncos, Gonzalo Sebastian
  23. 59070  Ladina, Maia Agostina
@@ -57,7 +58,6 @@ Por último, las personas que están _libres_ son aquellas que han dejado de cur
   3. 58773  Ellí Salazar, Gerónimo
  11. 58740  García, Sergio Martín
  19. 58736  Juarez Hindi, Lucas David
- 20. 58761  Juarez, Lautaro Andres En
  28. 58724  Lopez Garcia, Marcos Julio
  33. 59099  Moyano Berrondo, Tahiel
  37. 52142  Reyes Gordillo, Rodrigo M
