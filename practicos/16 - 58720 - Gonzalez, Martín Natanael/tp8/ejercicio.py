@@ -92,9 +92,9 @@ def hacer_grafico(data, producto):
     ax.grid(True, linestyle='-', alpha=0.2, color='gray')
 
     
-    datos_mensualés = data['datos_mensuales']
-    ax.plot(datos_mensualés['Fecha'], datos_mensualés['Unidades_vendidas'], label=producto, color='#1f77b4')
-    ax.plot(datos_mensualés['Fecha'], data['trend'], label='Tendencia', color='red', linestyle='--')
+    datos_mensuales = data['datos_mensuales']
+    ax.plot(datos_mensuales['Fecha'], datos_mensuales['Unidades_vendidas'], label=producto, color='#1f77b4')
+    ax.plot(datos_mensuales['Fecha'], data['trend'], label='Tendencia', color='red', linestyle='--')
 
     ax.set_title('Evolución de Ventas Mensual', pad=20, y=1.2)
     ax.set_ylabel('Unidades vendidas', labelpad=10)

@@ -66,7 +66,8 @@ if archivo_cargado is not None:
         st.title("Datos de Todas las Sucursales")
 
 
-    productos = [p for p in orden_productos if p in datos['Producto'].unique()]
+    # productos = [p for p in orden_productos if p in datos['Producto'].unique()]
+    productos = datos['Producto'].unique()
 
     for producto in productos:
         with st.container(border=True):

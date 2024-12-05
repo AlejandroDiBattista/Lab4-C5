@@ -8,12 +8,13 @@ Las personas que están en condición de _regular_ deberán presentarse a rendir
 
 Por último, las personas que están _libres_ son aquellas que han dejado de cursar.
 
-#### Promocionado
+#### Promocionado (30)
 ```
   5. 58735  Fernandez Gomez, Manuel A
   7. 58723  Figueroa, Santiago Isaac
   9. 58734  Galván, Víctor Mateo
  10. 59154  García, Máximo
+ 11. 58740  García, Sergio Martín
  12. 59076  Gómez Martínez, Matías Lionel
  14. 58894  González Nacusse, Flavia
  15. 59488  González, Mariano Emanuel
@@ -40,7 +41,7 @@ Por último, las personas que están _libres_ son aquellas que han dejado de cur
  50. 58866  Velázquez, Tobias Alejo
  51. 58899  Villagra, Juan Gabriel
 ```
-#### Promoción en suspenso
+#### Promoción en suspenso (9)
 ```
   4. 55578  Fernández Dumit, Patricio
   6. 55249  Fernandez, Gonzalo Tomas
@@ -52,11 +53,10 @@ Por último, las personas que están _libres_ son aquellas que han dejado de cur
  39. 58951  Robles, Ezequiel
  44. 55870  Stemberger, Emiliano
 ```
-#### Regular
+#### Regular (8)
 ```
   2. 58876  Díaz, Manuel Lautaro
   3. 58773  Ellí Salazar, Gerónimo
- 11. 58740  García, Sergio Martín
  19. 58736  Juarez Hindi, Lucas David
  28. 58724  Lopez Garcia, Marcos Julio
  33. 59099  Moyano Berrondo, Tahiel
@@ -64,7 +64,7 @@ Por último, las personas que están _libres_ son aquellas que han dejado de cur
  42. 58692  Rosselo Salas, Maia Josefina
  43. 58873  Salazar, Enzo Gabriel
 ```
-#### Libre
+#### Libre (7)
 ```
   1. 58690  Díaz, Facundo Gabriel
  13. 59135  Gómez, Facundo Matías
